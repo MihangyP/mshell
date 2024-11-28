@@ -1,45 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/28 11:38:45 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/11/28 11:38:46 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
-int	token_new_elem(t_token **new, char *str, int type)
-{
-	if (!str)
-		return (0);
-	(*new) = malloc(sizeof(t_token));
-	if (*new == NULL)
-	{
-		free(str);
-		return (0);
-	}
-	(*new)->text = str;
-	(*new)->id = type;
-	(*new)->next = NULL;
-	(*new)->prev = NULL;
-	return (1);
-}
-
-void	add_first(t_token **list, t_token *new)
-{
-	(*list) = new;
-	(*list)->prev = *list;
-	(*list)->next = *list;
-}
-
-int	append_token(t_token **list, char *str, int type)
+t_token	*new_token(char *text, int id)
 {
 	t_token	*new;
 
-	if (!token_new_elem(&new, str, type))
-		return (0);
-	if (!(*list))
-		add_first(list, new);
-	else
+	new = malloc(sizeof(t_token));
+	if (!new || !text)
+		return (NULL);
+	new->text = text;
+	new->id = id;
+	new->prev = NULL;
+	new->next = NULL;
+	return (new);
+}
+
+t_status	add_token(t_token **token, char *text, int id)
+{
+	t_token	*new;
+
+	new = new_token(text, id);
+	if (!new)
+		return (free(text), FAIL);
+	if (*token == NULL)
 	{
-		new->prev = (*list)->prev;
-		new->next = (*list);
-		(*list)->prev->next = new;
-		(*list)->prev = new;
+		(*token) = new;
+		(*token)->prev = *token;
+		(*token)->next = *token;
+		return (SUCCESS);
 	}
-	return (1);
+	new->prev = (*token)->prev;
+	new->next = (*token);
+	(*token)->prev->next = new;
+	(*token)->prev = new;
+	return (SUCCESS);
 }
 
 void	print_token(t_token *token)

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/26 14:55:33 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/11/28 12:43:53 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ extern pid_t	g_pid;
 typedef bool	t_status;
 # define SUCCESS true
 # define FAIL false
+
+typedef struct	s_quotes
+{
+	bool	in_single_quote;
+	bool	in_double_quote;
+}	t_quotes;
 
 enum	e_id
 {
@@ -101,6 +107,7 @@ bool	is_empty(const char *str);
 int		is_space(const char c);
 bool	is_operator(char c);
 void	sort_array(char **arr, int len);
+bool	is_quote(char c);
 
 /* */
 bool	print_error(char *str);
@@ -113,19 +120,23 @@ t_status	expand_entry(t_minishell *mshell, char **entry);
 char	*get_env_value(t_minishell *mshell, const char *key);
 char	*str_append(char *dest, const char *src, size_t *dest_len);
 t_status get_var(t_minishell *mshell, char **result, char *var_name, size_t *result_len);
+void handle_quotes(bool *in_single_quote, bool *in_double_quote, char quote_type);
+t_status append_text(char **result, size_t *result_len, char *text);
+t_status handle_env_var(t_minishell *mshell, char **result, size_t *result_len, char **input);
+t_status	process_quotes(char **input, char **res, size_t *res_len, t_quotes *quotes);
+t_status	process_input(t_minishell *mshell, char *input, char **result, size_t *result_len);
 
 /* tokenizer */
 t_status	insert_operator(t_token **root, char **entry);
 t_status	insert_cmd_arg(t_token **root, char **entry);
 int	cmd_arg_len(char *entry, int *quotes);
 void	copy_token(char *entry, int length, char *str, int i);
-int	token_new_elem(t_token **new, char *str, int type);
-void	add_first(t_token **list, t_token *new);
-int	append_token(t_token **list, char *str, int type);
+t_status	add_token(t_token **token, char *text, int id);
 void	print_token(t_token *token);
 
 /* parsing tokens*/
 bool	parsing_tokens(t_minishell *mshell);
+t_status	append_cmd(t_cmd **cmd, int infile, int outfile, char **cmd_param);
 
 /* exec */
 bool	exec_minishell(t_minishell *mshell);

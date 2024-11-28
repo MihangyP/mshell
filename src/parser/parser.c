@@ -1,59 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/11/28 12:01:49 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
-t_status	expand_entry(t_minishell *mshell, char **entry)
+t_status expand_entry(t_minishell *mshell, char **entry)
 {
-    char 	*input;
-    char 	*result;
-    size_t 	result_len;
-    bool 	in_single_quote;
-	bool	in_double_quote;
+    char	*result;
+    size_t	result_len;
 
+	result = NULL;
+	result_len = 0;
     if (!mshell || !entry || !*entry)
         return (FAIL);
-    input = *entry;
-    result = NULL;
-    result_len = 0;
-    in_single_quote = false;
-	in_double_quote = false;
-    while (*input) {
-        if (*input == '\'' && !in_double_quote)
-		{
-            in_single_quote = !in_single_quote;
-            result = str_append(result, "'", &result_len);
-            input++;
-        }
-		else if (*input == '"' && !in_single_quote)
-		{
-            in_double_quote = !in_double_quote;
-            result = str_append(result, "\"", &result_len);
-            input++;
-        }
-		else if (*input == '$' && !in_single_quote)
-		{
-            input++;
-            char var_name[256] = {0};
-            size_t var_len = 0;
-            if (*input == '?' || ft_isdigit(*input))
-                var_name[var_len++] = *input++;
-			else
-			{
-				while (ft_isalpha(*input) || *input == '_')
-                    var_name[var_len++] = *input++;
-            }
-            if (!get_var(mshell, &result, var_name, &result_len))
-			{
-                free(result);
-                return (FAIL);
-            }
-        }
-		else
-		{
-            char temp[2] = {*input, '\0'};
-            result = str_append(result, temp, &result_len);
-            if (!result)
-                return (FAIL);
-            input++;
-        }
+    if (process_input(mshell, *entry, &result, &result_len) == FAIL)
+    {
+        free(result);
+        return (FAIL);
     }
     free(*entry);
     *entry = result;
@@ -100,20 +71,18 @@ t_status	parse_entry(t_minishell *mshell, char *entry)
 	{
 		err_message = ft_strdup("Syntax error\n");
 		if (!err_message)
-			return (false);
+			return (FAIL);
 		write(2, err_message, ft_strlen(err_message));
 		mshell->exit_code = 2;
 		free_token(&mshell->token);
-		return (false);
+		return (SUCCESS);
 	}
 	if (mshell->token)
-	{
 		if (!parsing_tokens(mshell))
 		{
 			free_token(&mshell->token);
 			free_cmd(&mshell->cmd);
 			return (false);
 		}
-	}
 	return (SUCCESS);
 }

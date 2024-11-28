@@ -6,7 +6,7 @@
 #    By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/07 12:06:42 by pmihangy          #+#    #+#              #
-#    Updated: 2024/11/26 15:08:57 by irazafim         ###   ########.fr        #
+#    Updated: 2024/11/28 12:44:18 by pmihangy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,9 @@
 NAME = minishell
 SRC = main.c 
 SRC_FILES = $(addprefix src/, $(SRC))
-UTILS_FILES = error.c free.c lst.c signals.c utils.c
-PARSER_FILES = parser.c tokenizer.c tokenizer_utils.c parsing_tokens.c expander.c
+UTILS_FILES = error.c free.c lst.c signals.c utils.c utils2.c
+PARSER_FILES = parser.c tokenizer.c tokenizer_utils.c parsing_tokens.c expander.c \
+			   expander_utils.c cmd.c
 EXEC_FILES = exec.c find_cmd.c
 BUILTINS_FILES = cd.c pwd.c exit.c echo.c export.c unset.c env.c
 SRC_FILES += $(addprefix src/utils/, $(UTILS_FILES))

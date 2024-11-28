@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_tokens.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/11/28 12:50:55 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 bool	print_error(char *str)
@@ -264,42 +276,6 @@ bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 	return (true);
 }
 
-int	cmd_new_elem(t_cmd **new, int infile, int outfile, char **cmd_param)
-{
-	(*new) = malloc(sizeof(t_cmd));
-	if (*new == NULL)
-		return (0);
-	(*new)->skip_cmd = false;
-	(*new)->in = infile;
-	(*new)->out = outfile;
-	(*new)->cmd_param = cmd_param;
-	(*new)->next = NULL;
-	(*new)->prev = NULL;
-	return (1);
-}
-
-int	append_cmd(t_cmd **list, int infile, int outfile, char **cmd_param)
-{
-	t_cmd	*new;
-
-	if (!cmd_new_elem(&new, infile, outfile, cmd_param))
-		return (0);
-	if (!(*list))
-	{
-		(*list) = new;
-		(*list)->prev = *list;
-		(*list)->next = *list;
-	}
-	else
-	{
-		new->prev = (*list)->prev;
-		new->next = (*list);
-		(*list)->prev->next = new;
-		(*list)->prev = new;
-	}
-	return (1);
-}
-
 bool	norm(t_minishell *mshell, t_token *tmp)
 {
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
@@ -312,22 +288,22 @@ bool	norm(t_minishell *mshell, t_token *tmp)
 	return (true);
 }
 
-bool	parsing_tokens(t_minishell *mshell)
+t_status	parsing_tokens(t_minishell *mshell)
 {
 	t_token	*tmp;
 
 	tmp = mshell->token;
 	if (!norm(mshell, tmp))
-		return (false);
+		return (FAIL);
 	tmp = tmp->next;
 	while (tmp != mshell->token)
 	{
 		if (tmp->prev->id == PIPE)
 		{
 			if (!norm(mshell, tmp))
-				return (false);
+				return (FAIL);
 		}
 		tmp = tmp->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
