@@ -6,7 +6,7 @@
 #    By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/07 12:06:42 by pmihangy          #+#    #+#              #
-#    Updated: 2024/11/18 10:29:44 by irazafim         ###   ########.fr        #
+#    Updated: 2024/11/26 15:08:57 by irazafim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,14 @@
 NAME = minishell
 SRC = main.c 
 SRC_FILES = $(addprefix src/, $(SRC))
-UTILS_FILES = error.c
+UTILS_FILES = error.c free.c lst.c signals.c utils.c
+PARSER_FILES = parser.c tokenizer.c tokenizer_utils.c parsing_tokens.c expander.c
+EXEC_FILES = exec.c find_cmd.c
+BUILTINS_FILES = cd.c pwd.c exit.c echo.c export.c unset.c env.c
 SRC_FILES += $(addprefix src/utils/, $(UTILS_FILES))
+SRC_FILES += $(addprefix src/parser/, $(PARSER_FILES))
+SRC_FILES += $(addprefix src/exec/, $(EXEC_FILES))
+SRC_FILES += $(addprefix src/builtins/, $(BUILTINS_FILES))
 CC = cc -g
 CFLAGS = -Wall -Wextra #-Werror
 RM = rm -rf
