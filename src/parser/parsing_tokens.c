@@ -6,7 +6,7 @@
 /*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/28 12:50:55 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:32:29 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ bool	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
 	return (true);
 }
 
+// node3-node1-node2-node3-node1
 bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 {
 	if (!get_infile(mshell, tmp, mshell->cmd->prev) && \
@@ -265,7 +266,7 @@ bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 	if (mshell->cmd->prev->out == -1)
 	{
 		if (mshell->cmd->prev->in >= 0)
-			close (mshell->cmd->prev->in);
+			close(mshell->cmd->prev->in);
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->in = -1;
 		return (true);
@@ -276,32 +277,24 @@ bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 	return (true);
 }
 
-bool	norm(t_minishell *mshell, t_token *tmp)
-{
-	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
-		free_minishell(mshell);
-	if (!fill_cmd(mshell, tmp))
-	{
-		mshell->exit_code = 2;
-		return (false);
-	}
-	return (true);
-}
-
 t_status	parsing_tokens(t_minishell *mshell)
 {
 	t_token	*tmp;
 
 	tmp = mshell->token;
-	if (!norm(mshell, tmp))
-		return (FAIL);
+	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
+		free_minishell(mshell);
+	if (!fill_cmd(mshell, tmp))
+		return (mshell->exit_code = 2, FAIL);
 	tmp = tmp->next;
 	while (tmp != mshell->token)
 	{
 		if (tmp->prev->id == PIPE)
 		{
-			if (!norm(mshell, tmp))
-				return (FAIL);
+			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
+				free_minishell(mshell);
+			if (!fill_cmd(mshell, tmp))
+				return (mshell->exit_code = 2, FAIL);
 		}
 		tmp = tmp->next;
 	}

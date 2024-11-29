@@ -6,7 +6,7 @@
 /*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/28 12:01:49 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/11/29 10:53:20 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,30 +59,39 @@ t_status	tokenize_entry(t_token **root, char *entry)
 	return (SUCCESS);
 }
 
-t_status	parse_entry(t_minishell *mshell, char *entry)
+t_status	check_token_error(t_minishell *mshell)
 {
 	char	*err_message;
 
-	if (!expand_entry(mshell, &entry))
-		return (FAIL);
-	if (!tokenize_entry(&mshell->token, entry))
-		return (FAIL);
-	if (mshell->token && mshell->token->prev->id == PIPE)
+	err_message = NULL;
+	if (mshell->token && \
+	   (mshell->token->prev->id == PIPE || mshell->token->id == PIPE))
 	{
 		err_message = ft_strdup("Syntax error\n");
 		if (!err_message)
 			return (FAIL);
-		write(2, err_message, ft_strlen(err_message));
 		mshell->exit_code = 2;
+		write(2, err_message, ft_strlen(err_message));
 		free_token(&mshell->token);
-		return (SUCCESS);
+		return (FAIL);
 	}
+	return (SUCCESS);
+}
+
+t_status	parse_entry(t_minishell *mshell, char *entry)
+{
+	if (!expand_entry(mshell, &entry))
+		return (FAIL);
+	if (!tokenize_entry(&mshell->token, entry))
+		return (FAIL);
+	if (!check_token_error(mshell))
+		return (FAIL);
 	if (mshell->token)
 		if (!parsing_tokens(mshell))
 		{
 			free_token(&mshell->token);
 			free_cmd(&mshell->cmd);
-			return (false);
+			return (FAIL);
 		}
 	return (SUCCESS);
 }

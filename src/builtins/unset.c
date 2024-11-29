@@ -83,7 +83,7 @@ bool	unset(char *str, t_lst **env)
 	return (false);
 }
 
-int	ft_unset(char **str, t_lst **env)
+int	unset_minishell(char **str, t_lst **env)
 {
 	int	exit_code;
 	int	i;

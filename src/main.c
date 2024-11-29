@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/26 15:03:08 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:01:27 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,26 @@ void	free_minishell(t_minishell	*mshell)
 	rl_clear_history();
 	if (!access(".heredoc.tmp", F_OK))
 		unlink(".heredoc.tmp");
+}
+
+bool	make_env2(t_minishell *mshell)
+{
+	char	path[PATH_MAX];
+	char	*tmp;
+
+	tmp = ft_strdup("OLDPWD");
+	if (!tmp || !lst_append(&(mshell->env), tmp) || getcwd(path, PATH_MAX) == NULL)
+	{
+		free_minishell(mshell);
+		exit(1);
+	}
+	tmp = ft_strjoin("PWD=", path);
+	if (!tmp || !lst_append(&(mshell->env), tmp))
+	{
+		free_minishell(mshell);
+		exit(1);
+	}
+	return (1);
 }
 
 t_status	repl(t_minishell *mshell)
@@ -65,9 +85,9 @@ t_status	init_env(t_minishell *mshell, char **env)
 	int		i;
 	char	*str;
 
-	// TODO: a voir ce que ca fait
-	/*if (*env == NULL)*/
-		/*return (make_env2(mshell))*/
+	 /*TODO: a voir ce que ca fait*/
+	if (*env == NULL)
+		return (make_env2(mshell));
 	i = 0;
 	while (env[i])
 	{
@@ -88,8 +108,8 @@ void	init_minishell(t_minishell *mshell)
 	mshell->env = NULL;
 	mshell->cmd = NULL;
 	mshell->exit_code = 0;
-	mshell->pipefd[0] = -69;
-	mshell->pipefd[1] = -69;
+	mshell->pipefd[0] = -1;
+	mshell->pipefd[1] = -1;
 	g_pid = 0;
 }
 

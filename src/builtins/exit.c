@@ -1,6 +1,7 @@
 #include <minishell.h>
 
-int	almost_atoi(char *str, int *err)
+// To understand
+static int	get_return_value(char *str, bool *err)
 {
 	unsigned long long	ret;
 	int					i;
@@ -8,7 +9,7 @@ int	almost_atoi(char *str, int *err)
 	int					pn;
 
 	i = 0;
-	while ((9 <= str[i] && str[i] <= 13) || str[i] == 32)
+	while (is_space(str[i]))
 		i++;
 	pn = 1;
 	if (str[i] == '+' || str[i] == '-')
@@ -16,45 +17,41 @@ int	almost_atoi(char *str, int *err)
 			pn = -1;
 	j = i;
 	ret = 0;
-	while ('0' <= str[i] && str[i] <= '9')
+	while (ft_isdigit(str[i]))
 		ret = ret * 10 + (str[i++] - 48);
-	while ((9 <= str[i] && str[i] <= 13) || str[i] == 32)
+	while (is_space(str[i]))
 		i++;
 	if (str[i] || i - j > 20 || ((pn == -1 && (ret - 1) > LONG_MAX) || \
 		(pn == 1 && (ret > LONG_MAX))))
-		*err = 1;
+		*err = true;
 	return ((int)((ret * pn) % 256));
 }
 
-void	ft_exit(t_minishell *mshell, char **args)
+void	exit_minishell(t_minishell *mshell, char **av)
 {
-	int	ret;
-	int	err;
+	bool	err;
+	int		return_value;
 
-	ret = 0;
-	err = 0;
-	if (args[1])
+	if (!av[1])
 	{
-		ret = almost_atoi(args[1], &err);
-		if (err)
-		{
-			print_error("exit: ");
-			print_error(args[1]);
-			print_error(": numeric argument required\n");
-			free_minishell(mshell);
-		}
+		free_minishell(mshell);
+		exit(0);
 	}
-	if (args[1] && args[2])
+	if (av[2])
 	{
 		print_error("exit: too many arguments\n");
 		mshell->exit_code = 1;
 		return ;
 	}
-	if (!args[1])
+	err = false;
+	return_value = get_return_value(av[1], &err);
+	if (err)
 	{
+		print_error("exit: ");
+		print_error(av[1]);
+		print_error(": numeric argument required\n");
 		free_minishell(mshell);
-		exit(ret);
 	}
 	free_minishell(mshell);
-	exit(ret);
+	exit(return_value);
 }

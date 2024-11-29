@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/28 12:43:53 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:51:17 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,13 @@ bool	launch_builtin(t_minishell *mshell, t_cmd *cmd);
 bool	is_builtin(char *cmd);
 
 /* builtins */
-int	ft_cd(t_minishell *mshell, char **params);
-int	ft_echo(char **args);
-int	ft_env(t_lst *env);
-void	ft_exit(t_minishell *mshell, char **args);
-int	ft_export(char **str, t_lst **env);
-int	ft_pwd(void);
-int	ft_unset(char **str, t_lst **env);
+int		cd_minishell(t_minishell *mshell, char **params);
+int		echo_minishell(char **args);
+int		env_minishell(t_lst *env);
+void	exit_minishell(t_minishell *mshell, char **args);
+int		export_minishell(char **str, t_lst **env);
+int		pwd_minishell(void);
+int		unset_minishell(char **str, t_lst **env);
 
 int	exist(char *str, t_lst *env);
 bool	export(char *str, t_lst **env);

@@ -73,7 +73,7 @@ bool	export(char *str, t_lst **env)
 	return (true);
 }
 
-int	ft_export(char **str, t_lst **env)
+int	export_minishell(char **str, t_lst **env)
 {
 	int	exit_code;
 	int	i;

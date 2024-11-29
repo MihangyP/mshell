@@ -1,20 +1,19 @@
 #include <minishell.h>
 
-int	ft_env(t_lst *env)
+int	env_minishell(t_lst *env)
 {
-	t_lst	*temp;
+	t_lst	*curr;
 
-	temp = env;
-	if (!temp)
+	curr = env;
+	if (!curr)
 		return (0);
-	if (ft_strchr(temp->text, '='))
-		printf("%s\n", temp->text);
-	temp = temp->next;
-	while (temp != env)
+	while (curr->next != env)
 	{
-		if (ft_strchr(temp->text, '='))
-			printf("%s\n", temp->text);
-		temp = temp->next;
+		if (ft_strchr(curr->text, '='))
+			printf("%s\n", curr->text);
+		curr = curr->next;
 	}
+	if (ft_strchr(curr->text, '='))
+		printf("%s\n", curr->text);
 	return (0);
 }

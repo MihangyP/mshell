@@ -61,7 +61,7 @@ void	update_pwd(t_minishell *mshell, char *param)
 	free(pwd);
 }
 
-int	ft_cd(t_minishell *mshell, char **params)
+int	cd_minishell(t_minishell *mshell, char **params)
 {
 	int	res;
 

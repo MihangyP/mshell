@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-int	check_new_line(char *str)
+static bool	has_dash_n_option(char *str)
 {
 	int	i;
 
@@ -11,40 +11,35 @@ int	check_new_line(char *str)
 		while (str[i] && str[i] == 'n')
 			i++;
 		if (i == (int)ft_strlen(str))
-			return (1);
+			return (true);
 	}
-	return (0);
+	return (false);
 }
 
-void	write_echo(int count, int i, bool new_line, char **args)
+int	echo_minishell(char **av)
 {
-	while (args[i] && check_new_line(args[i]))
-	{
-		++i;
-		new_line = false;
-	}
-	while (i < count)
-	{
-		write(1, args[i], ft_strlen(args[i]));
-		if (i != count - 1)
-			write(1, " ", 1);
-		++i;
-	}
-	if (new_line)
-		write(1, "\n", 1);
-}
-
-int	ft_echo(char **args)
-{
-	int		count;
+	int		ac;
 	int		i;
-	bool	new_line;
+	bool	dash_n_option;
 
-	count = 0;
-	while (args[count])
-		++count;
+	ac = 0;
 	i = 1;
-	new_line = true;
-	write_echo(count, i, new_line, args);
+	dash_n_option = false;
+	while (av[ac])
+		++ac;
+	while (av[i] && has_dash_n_option(av[i]))
+	{
+		dash_n_option = true;
+		++i;
+	}
+	while (i < ac)
+	{
+		printf("%s", av[i]);
+		if (i != ac - 1)
+			printf(" ");
+		++i;
+	}
+	if (!dash_n_option)
+		printf("\n");
 	return (0);
 }

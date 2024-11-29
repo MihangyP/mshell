@@ -149,26 +149,26 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 
 void	exec_builtin(int save_stdout, t_minishell *mshell, t_cmd *cmd)
 {
-	if (!ft_strncmp("echo", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_echo(cmd->cmd_param);
-	else if (!ft_strncmp("cd", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_cd(mshell, cmd->cmd_param);
-	else if (!ft_strncmp("pwd", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_pwd();
-	else if (!ft_strncmp("export", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_export(cmd->cmd_param, &mshell->env);
-	else if (!ft_strncmp("unset", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_unset(cmd->cmd_param, &mshell->env);
-	else if (!ft_strncmp("env", cmd->cmd_param[0], INT_MAX))
-		mshell->exit_code = ft_env(mshell->env);
-	else if (!ft_strncmp("exit", cmd->cmd_param[0], INT_MAX))
+	if (!ft_strncmp("echo", cmd->cmd_param[0], 69))
+		mshell->exit_code = echo_minishell(cmd->cmd_param);
+	else if (!ft_strncmp("cd", cmd->cmd_param[0], 69))
+		mshell->exit_code = cd_minishell(mshell, cmd->cmd_param);
+	else if (!ft_strncmp("pwd", cmd->cmd_param[0], 69))
+		mshell->exit_code = pwd_minishell();
+	else if (!ft_strncmp("export", cmd->cmd_param[0], 69))
+		mshell->exit_code = export_minishell(cmd->cmd_param, &mshell->env);
+	else if (!ft_strncmp("unset", cmd->cmd_param[0], 69))
+		mshell->exit_code = unset_minishell(cmd->cmd_param, &mshell->env);
+	else if (!ft_strncmp("env", cmd->cmd_param[0], 69))
+		mshell->exit_code = env_minishell(mshell->env);
+	else if (!ft_strncmp("exit", cmd->cmd_param[0], 69))
 	{
 		if (cmd->out >= 0)
 		{
 			dup2(save_stdout, 1);
 			close(save_stdout);
 		}
-		ft_exit(mshell, cmd->cmd_param);
+		exit_minishell(mshell, cmd->cmd_param);
 	}
 }
 
@@ -233,7 +233,6 @@ bool	exec_cmd(t_minishell *mshell, t_cmd *cmd, int *pip)
 	return (true);
 }
 
-
 bool	is_builtin(char *cmd)
 {
 	if (!cmd)
@@ -246,18 +245,20 @@ bool	is_builtin(char *cmd)
 	return (false);
 }
 
-bool	exec_minishell(t_minishell *mshell)
+t_status	exec_minishell(t_minishell *mshell)
 {
 	t_cmd	*tmp;
 	int		*pip;
 
 	pip = mshell->pipefd;
 	tmp = mshell->cmd;
+	// Simple command like env, pwd, echo Donto, export DONTO=DONTO ..
 	if (tmp && tmp->skip_cmd == false && tmp->next == tmp && tmp->cmd_param[0] \
 		&& is_builtin(tmp->cmd_param[0]))
 		return (launch_builtin(mshell, tmp));
+	//--------
 	if (pipe(pip) == -1)
-		return (false);
+		return (FAIL);
 	exec_cmd(mshell, tmp, pip);
 	tmp = tmp->next;
 	while (tmp != mshell->cmd)
@@ -268,5 +269,5 @@ bool	exec_minishell(t_minishell *mshell)
 		tmp = tmp->next;
 	}
 	wait_all(mshell);
-	return (true);
+	return (SUCCESS);
 }
