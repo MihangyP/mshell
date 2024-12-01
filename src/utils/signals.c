@@ -15,3 +15,8 @@ void	listen_signals(void)
 	signal(SIGINT, handle_sigint);	
 	signal(SIGQUIT, SIG_IGN);
 }
+
+void	signals2(void)
+{
+	signal(SIGQUIT, SIG_DFL);
+}

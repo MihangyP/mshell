@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/29 13:51:17 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/01 14:58:39 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ char	**lst_to_arr(t_lst *env);
 
 /* signals */
 void	listen_signals(void);
+void	signals2(void);
 
 /* utils */
 bool	is_empty(const char *str);
@@ -143,6 +144,14 @@ bool	exec_minishell(t_minishell *mshell);
 char	*find_cmd(t_minishell *mshell, char *sample, t_lst *env);
 bool	launch_builtin(t_minishell *mshell, t_cmd *cmd);
 bool	is_builtin(char *cmd);
+void	exec_builtin(int save_stdout, t_minishell *mshell, t_cmd *cmd);
+bool	launch_builtin(t_minishell *mshell, t_cmd *cmd);
+void	built(int *pip, t_cmd *cmd, t_minishell *mshell);
+void	redirect_in_out(t_minishell *mshell, t_cmd *cmd, int *pip);
+void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip);
+void	parent_process(t_minishell *mshell, t_cmd *cmd, int *pip);
+bool	cmd_exist(char **path, t_minishell *mshell, char *cmd);
+void	wait_all(t_minishell *mshell);
 
 /* builtins */
 int		cd_minishell(t_minishell *mshell, char **params);

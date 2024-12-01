@@ -1,30 +1,29 @@
 #include <minishell.h>
 
-// To understand
 static int	get_return_value(char *str, bool *err)
 {
-	unsigned long long	ret;
 	int					i;
-	int					j;
-	int					pn;
+	int					neg;
+	int					start_index;
+	unsigned long long	num;
 
 	i = 0;
+	neg = 1;
+	num = 0;
 	while (is_space(str[i]))
-		i++;
-	pn = 1;
+		++i;
 	if (str[i] == '+' || str[i] == '-')
 		if (str[i++] == '-')
-			pn = -1;
-	j = i;
-	ret = 0;
+			neg = -1;
+	start_index = i;
 	while (ft_isdigit(str[i]))
-		ret = ret * 10 + (str[i++] - 48);
+		num = num * 10 + (str[i++] - 48);
 	while (is_space(str[i]))
-		i++;
-	if (str[i] || i - j > 20 || ((pn == -1 && (ret - 1) > LONG_MAX) || \
-		(pn == 1 && (ret > LONG_MAX))))
+		++i;
+	if (str[i] || i - start_index > 20 || ((neg == -1 && (num - 1) > LONG_MAX) || \
+		(neg == 1 && (num > LONG_MAX))))
 		*err = true;
-	return ((int)((ret * pn) % 256));
+	return ((int)((num * neg) % 256));
 }
 
 void	exit_minishell(t_minishell *mshell, char **av)
@@ -35,7 +34,7 @@ void	exit_minishell(t_minishell *mshell, char **av)
 	if (!av[1])
 	{
 		free_minishell(mshell);
-		exit(0);
+		exit(mshell->exit_code);
 	}
 	if (av[2])
 	{
@@ -51,6 +50,7 @@ void	exit_minishell(t_minishell *mshell, char **av)
 		print_error(av[1]);
 		print_error(": numeric argument required\n");
 		free_minishell(mshell);
+		exit(2);
 	}
 	free_minishell(mshell);
 	exit(return_value);
