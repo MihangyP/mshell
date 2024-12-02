@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/29 10:53:20 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:26:51 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,15 @@ t_status	check_token_error(t_minishell *mshell)
 t_status	parse_entry(t_minishell *mshell, char *entry)
 {
 	if (!expand_entry(mshell, &entry))
-		return (FAIL);
+	{
+		free_minishell(mshell);
+		exit(1);	
+	}
 	if (!tokenize_entry(&mshell->token, entry))
-		return (FAIL);
+	{
+		free_minishell(mshell);
+		exit(1);
+	}
 	if (!check_token_error(mshell))
 		return (FAIL);
 	if (mshell->token)

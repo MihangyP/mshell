@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_tokens.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/29 16:32:29 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:34:13 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,6 @@ bool	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
 	return (true);
 }
 
-// node3-node1-node2-node3-node1
 bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 {
 	if (!get_infile(mshell, tmp, mshell->cmd->prev) && \
@@ -273,7 +272,10 @@ bool	fill_cmd(t_minishell *mshell, t_token *tmp)
 	}
 	mshell->cmd->prev->cmd_param = get_param(mshell, tmp);
 	if (!mshell->cmd->prev->cmd_param)
+	{
 		free_minishell(mshell);
+		exit(1);		
+	}
 	return (true);
 }
 
@@ -283,7 +285,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 
 	tmp = mshell->token;
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
+	{
 		free_minishell(mshell);
+		exit(1);		
+	}
 	if (!fill_cmd(mshell, tmp))
 		return (mshell->exit_code = 2, FAIL);
 	tmp = tmp->next;
@@ -292,7 +297,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 		if (tmp->prev->id == PIPE)
 		{
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
+			{
 				free_minishell(mshell);
+				exit(1);				
+			}
 			if (!fill_cmd(mshell, tmp))
 				return (mshell->exit_code = 2, FAIL);
 		}

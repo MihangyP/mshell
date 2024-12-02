@@ -36,7 +36,10 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	else
 		absolute_path(path, cmd, mshell);
 	if (!(*path) && mshell->exit_code == -1)
+	{
 		free_minishell(mshell);
+		exit(mshell->exit_code);
+	}
 	if (!(*path))
 	{
 		mshell->exit_code = 127;
@@ -59,13 +62,19 @@ bool	exec_cmd(t_minishell *mshell, t_cmd *cmd, int *pip)
 {
 	g_pid = fork();
 	if (g_pid < 0)
+	{
 		free_minishell(mshell);
+		exit(1);
+	}
 	else if (!g_pid)
 	{
 		if (cmd->cmd_param && cmd->cmd_param[0])
 			child_process(mshell, cmd, pip);
 		else
+		{
 			free_minishell(mshell);
+			exit(0);
+		}
 	}
 	else
 		parent_process(mshell, cmd, pip);

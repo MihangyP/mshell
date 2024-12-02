@@ -33,7 +33,10 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 		redirect_in_out(mshell, cmd, pip);
 		env = lst_to_arr(mshell->env);
 		if (!env)
+		{
 			free_minishell(mshell);
+			exit(1);
+		}
 		rl_clear_history();
 		signals2();
 		execve(path, cmd->cmd_param, env);

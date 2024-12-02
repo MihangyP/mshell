@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/01 12:56:43 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:19:07 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	free_minishell(t_minishell	*mshell)
 	if (!access(".heredoc.tmp", F_OK))
 		unlink(".heredoc.tmp");
 }
-/*
+
 bool	make_env2(t_minishell *mshell)
 {
 	char	path[PATH_MAX];
@@ -50,7 +50,6 @@ bool	make_env2(t_minishell *mshell)
 	}
 	return (1);
 }
-*/
 
 t_status	repl(t_minishell *mshell)
 {
@@ -77,6 +76,7 @@ t_status	repl(t_minishell *mshell)
 		}
 		free_token(&mshell->token);
 		free_cmd(&mshell->cmd);
+		g_pid = 0;
 	}
 	return (SUCCESS);
 }
@@ -87,8 +87,8 @@ t_status	init_env(t_minishell *mshell, char **env)
 	char	*str;
 
 	 /*TODO: a voir ce que ca fait*/
-	// if (*env == NULL)
-	// 	return (make_env2(mshell));
+	if (*env == NULL)
+		return (make_env2(mshell));
 	i = 0;
 	while (env[i])
 	{
