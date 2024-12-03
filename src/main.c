@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/02 15:19:07 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:00:10 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ t_status	repl(t_minishell *mshell)
 			if (!exec_minishell(mshell))
 				return (FAIL);
 		}
-		free_token(&mshell->token);
 		free_cmd(&mshell->cmd);
+		free_token(&mshell->token);
 		g_pid = 0;
 	}
 	return (SUCCESS);
