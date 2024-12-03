@@ -81,7 +81,7 @@ void	assign_operator(char **entry, char **op, int *op_type)
 		if (**entry == '<')
 			*op_type = HEREDOC;
 		else
-			*op_type = TRUNC;
+			*op_type = APPEND;
 		(*entry) += 2;
 	}
 	else
