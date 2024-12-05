@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/03 11:00:10 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:50:00 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,33 @@ bool	make_env2(t_minishell *mshell)
 		exit(1);
 	}
 	return (1);
+}
+
+void print_cmd(t_cmd *cmd)
+{
+	t_cmd *curr;
+
+	curr = cmd;
+	while (curr->next != cmd)
+	{
+		printf("============\n");
+		printf("in: %d\n", curr->in);
+		printf("out: %d\n", curr->out);
+		printf("cmd_param: ");
+		for (int i = 0; cmd->cmd_param[i]; ++i)
+			printf(" %s", cmd->cmd_param[i]);
+		printf("\n");
+		printf("=============\n");
+		curr = curr->next;
+	}
+	printf("============\n");
+	printf("in: %d\n", curr->in);
+	printf("out: %d\n", curr->out);
+	printf("cmd_param: ");
+	for (int i = 0; cmd->cmd_param[i]; ++i)
+		printf(" %s", cmd->cmd_param[i]);
+	printf("\n");
+	printf("=============\n");
 }
 
 t_status	repl(t_minishell *mshell)

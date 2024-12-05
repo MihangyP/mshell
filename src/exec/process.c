@@ -50,6 +50,7 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 
 void	parent_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 {
+	close(pip[1]);
 	if (cmd->in >= 0)
 		close(cmd->in);
 	if (cmd->in == -2)

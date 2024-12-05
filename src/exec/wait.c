@@ -30,12 +30,9 @@ void	wait_all(t_minishell *mshell)
 	len = len_cmd(tmp);
 	while (len--)
 	{
-		pid = waitpid(0, &status, 0);
-		if (pid == g_pid)
-		{
-			if (WIFEXITED(status))
-				mshell->exit_code = WEXITSTATUS(status);
-		}
+		pid = waitpid(-1, &status, 0);
+		if (pid == g_pid && WIFEXITED(status))
+			mshell->exit_code = WEXITSTATUS(status);
 		if (tmp->out >= 0)
 			close(tmp->out);
 		if (tmp->in >= 0)
