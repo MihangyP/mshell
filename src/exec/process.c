@@ -44,8 +44,7 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 	}
 	if (path)
 		free(path);
-	free_minishell(mshell);
-	exit(mshell->exit_code);
+	free_and_exit(mshell, mshell->exit_code);
 }
 
 void	parent_process(t_minishell *mshell, t_cmd *cmd, int *pip)

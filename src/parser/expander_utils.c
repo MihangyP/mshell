@@ -42,7 +42,6 @@ t_status handle_env_var(t_minishell *mshell, char **result, size_t *result_len, 
         while (ft_isalpha(**input) || **input == '_')
             var_name[var_len++] = *(*input)++;
     }
-
     if (!get_var(mshell, result, var_name, result_len))
         return (FAIL);
     return (SUCCESS);

@@ -89,23 +89,3 @@ int	cd_minishell(t_minishell *data, char **params)
 	}
 	return (1);
 }
-/*
-int	cd_minishell(t_minishell *mshell, char **params)
-{
-	int	status;
-
-	if (params[0] && params[1] && !params[2])
-	{
-		status = chdir(params[1]);
-		if (status == -1)
-			strerror(errno);
-		else if (!status)
-		{
-			update_oldpwd(mshell);
-			update_pwd(mshell);
-		}
-		return (status);
-	}
-	return (1);
-}
-*/

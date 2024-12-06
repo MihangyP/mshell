@@ -162,7 +162,7 @@ int	open_file(t_minishell *mshell, char *filename, int type)
 	return (fd);
 }
 
-bool	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
+t_status	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
 {
 	if (tmp->id == TRUNC)
 	{
@@ -172,7 +172,7 @@ bool	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
 			return (print_error_token(tmp, mshell));
 		cmd->out = open_file(NULL, tmp->next->text, TRUNC);
 		if (cmd->out == -1)
-			return (false);
+			return (FAIL);
 	}
 	else if (tmp->id == APPEND)
 	{
@@ -182,29 +182,29 @@ bool	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
 			return (print_error_token(tmp, mshell));
 		cmd->out = open_file(NULL, tmp->next->text, APPEND);
 		if (cmd->out == -1)
-			return (false);
+			return (FAIL);
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	get_outfile(t_token *token, t_cmd *cmd, t_minishell *mshell)
+t_status	get_outfile(t_token *token, t_cmd *cmd, t_minishell *mshell)
 {
 	t_token	*tmp;
 
 	tmp = token;
 	if (tmp->id != PIPE && !get_out(tmp, cmd, mshell))
-		return (false);
+		return (FAIL);
 	tmp = tmp->next;
 	while (tmp != mshell->token && tmp->id != PIPE)
 	{
 		if (!get_out(tmp, cmd, mshell))
-			return (false);
+			return (FAIL);
 		tmp = tmp->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
+t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 {
 	if (tmp->id == INPUT)
 	{
@@ -214,7 +214,7 @@ bool	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 			return (print_error_token(tmp, mshell));
 		cmd->in = open_file(mshell, tmp->next->text, INPUT);
 		if (cmd->in == -1)
-			return (false);
+			return (FAIL);
 	}
 	else if (tmp->id == HEREDOC)
 	{
@@ -224,87 +224,78 @@ bool	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 			return (print_error_token(tmp, mshell));
 		cmd->in = open_file(mshell, tmp->next->text, HEREDOC);
 		if (cmd->in == -1)
-			return (false);
+			return (FAIL);
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
+t_status	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
 {
 	t_token	*tmp;
 
 	tmp = token;
 	if (tmp->id != PIPE && !get_in(mshell, tmp, cmd))
-		return (false);
+		return (FAIL);
 	if (tmp->id == PIPE)
-		return (true);
+		return (SUCCESS);
 	tmp = tmp->next;
 	while (tmp->id != PIPE && tmp != mshell->token)
 	{
 		if (!get_in(mshell, tmp, cmd))
-			return (false);
+			return (FAIL);
 		tmp = tmp->next;
 	}
-	return (true);
+	return (SUCCESS);
 }
 
-bool	fill_cmd(t_minishell *mshell, t_token *tmp)
+t_status	parsing(t_minishell *mshell, t_token *tmp)
 {
 	if (!get_infile(mshell, tmp, mshell->cmd->prev) && \
 		mshell->cmd->prev->in != -1)
-		return (false);
+		return (FAIL);
 	if (mshell->cmd->prev->in == -1)
 	{
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->out = -1;
-		return (true);
+		return (SUCCESS);
 	}
 	if (!get_outfile(tmp, mshell->cmd->prev, mshell) && mshell->cmd->prev->out \
 		!= -1)
-		return (false);
+		return (FAIL);
 	if (mshell->cmd->prev->out == -1)
 	{
 		if (mshell->cmd->prev->in >= 0)
 			close(mshell->cmd->prev->in);
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->in = -1;
-		return (true);
+		return (SUCCESS);
 	}
 	mshell->cmd->prev->cmd_param = get_param(mshell, tmp);
 	if (!mshell->cmd->prev->cmd_param)
-	{
-		free_minishell(mshell);
-		exit(1);		
-	}
-	return (true);
+		free_and_exit(mshell, 1);
+	return (SUCCESS);
 }
 
 t_status	parsing_tokens(t_minishell *mshell)
 {
-	t_token	*tmp;
+	t_token	*curr;
 
-	tmp = mshell->token;
+	curr = mshell->token;
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
-	{
-		free_minishell(mshell);
-		exit(1);		
-	}
-	if (!fill_cmd(mshell, tmp))
+		free_and_exit(mshell, 1);
+	if (!parsing(mshell, curr))
 		return (mshell->exit_code = 2, FAIL);
-	tmp = tmp->next;
-	while (tmp != mshell->token)
+	curr = curr->next;
+	while (curr != mshell->token)
 	{
 		if (tmp->prev->id == PIPE)
 		{
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
-			{
-				free_minishell(mshell);
-				exit(1);				
-			}
-			if (!fill_cmd(mshell, tmp))
+				free_and_exit(mshell, 1);
+			if (!parsing(mshell, curr))
 				return (mshell->exit_code = 2, FAIL);
 		}
-		tmp = tmp->next;
+		curr = curr->next;
 	}
 	return (SUCCESS);
 }

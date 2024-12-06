@@ -36,10 +36,7 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	else
 		absolute_path(path, cmd, mshell);
 	if (!(*path) && mshell->exit_code == -1)
-	{
-		free_minishell(mshell);
-		exit(mshell->exit_code);
-	}
+		free_and_exit(mshell, mshell->exit_code);
 	if (!(*path))
 	{
 		mshell->exit_code = 127;
@@ -56,12 +53,6 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	if (!check_dir(path, cmd, mshell))
 		return (false);
 	return (true);
-}
-
-void	free_and_exit(t_minishell *mshell, int exit_code)
-{
-	free_minishell(mshell);
-	exit(exit_code);
 }
 
 t_status	exec_cmd(t_minishell *mshell, t_cmd *cmd)

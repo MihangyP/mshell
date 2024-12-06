@@ -27,3 +27,8 @@ void	wait_childrens(t_minishell *mshell)
 		close(curr->in);
 }
 
+void	free_and_exit(t_minishell *mshell, int exit_code)
+{
+	free_minishell(mshell);
+	exit(exit_code);
+}

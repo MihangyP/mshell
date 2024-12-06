@@ -31,24 +31,19 @@ void	free_minishell(t_minishell	*mshell)
 		unlink(".heredoc.tmp");
 }
 
-bool	make_env2(t_minishell *mshell)
+void	init_initial_env(t_minishell *mshell)
 {
 	char	path[PATH_MAX];
-	char	*tmp;
+	char	*str;
 
-	tmp = ft_strdup("OLDPWD");
-	if (!tmp || !lst_append(&(mshell->env), tmp) || getcwd(path, PATH_MAX) == NULL)
-	{
-		free_minishell(mshell);
-		exit(1);
-	}
-	tmp = ft_strjoin("PWD=", path);
-	if (!tmp || !lst_append(&(mshell->env), tmp))
-	{
-		free_minishell(mshell);
-		exit(1);
-	}
-	return (1);
+	str = ft_strdup("OLDPWD");
+	if (!str || !lst_append(&(mshell->env), str))
+		free_and_exit(mshell, 1);
+	if (!getcwd(path, PATH_MAX))
+		free_and_exit(mshell, 1);
+	str = ft_strjoin("PWD=", path);
+	if (!str || !lst_append(&(mshell->env), str))
+		free_and_exit(mshell, 1);
 }
 
 t_status	repl(t_minishell *mshell)
@@ -86,9 +81,11 @@ t_status	init_env(t_minishell *mshell, char **env)
 	int		i;
 	char	*str;
 
-	 /*TODO: a voir ce que ca fait*/
 	if (*env == NULL)
-		return (make_env2(mshell));
+	{
+		init_initial_env(mshell);
+		return (SUCCESS);
+	}
 	i = 0;
 	while (env[i])
 	{

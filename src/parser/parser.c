@@ -81,15 +81,9 @@ t_status	check_token_error(t_minishell *mshell)
 t_status	parse_entry(t_minishell *mshell, char *entry)
 {
 	if (!expand_entry(mshell, &entry))
-	{
-		free_minishell(mshell);
-		exit(1);	
-	}
+		free_and_exit(mshell, 1);
 	if (!tokenize_entry(&mshell->token, entry))
-	{
-		free_minishell(mshell);
-		exit(1);
-	}
+		free_and_exit(mshell, 1);
 	if (!check_token_error(mshell))
 		return (FAIL);
 	if (mshell->token)

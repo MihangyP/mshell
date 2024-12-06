@@ -109,6 +109,7 @@ int		is_space(const char c);
 bool	is_operator(char c);
 void	sort_array(char **arr, int len);
 bool	is_quote(char c);
+void	free_and_exit(t_minishell *mshell, int exit_code);
 
 /* */
 bool	print_error(char *str);

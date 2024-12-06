@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-static int	get_return_value(char *str, bool *err)
+static int	get_exit_value(char *str, bool *err)
 {
 	int					i;
 	int					neg;
@@ -29,13 +29,10 @@ static int	get_return_value(char *str, bool *err)
 void	exit_minishell(t_minishell *mshell, char **av)
 {
 	bool	err;
-	int		return_value;
+	int		exit_value;
 
 	if (!av[1])
-	{
-		free_minishell(mshell);
-		exit(mshell->exit_code);
-	}
+		free_and_exit(mshell, exit_code);
 	if (av[2])
 	{
 		print_error("exit: too many arguments\n");
@@ -43,15 +40,13 @@ void	exit_minishell(t_minishell *mshell, char **av)
 		return ;
 	}
 	err = false;
-	return_value = get_return_value(av[1], &err);
+	exit_value = get_exit_value(av[1], &err);
 	if (err)
 	{
 		print_error("exit: ");
 		print_error(av[1]);
 		print_error(": numeric argument required\n");
-		free_minishell(mshell);
-		exit(2);
+		free_and_exit(mshell, 2);
 	}
-	free_minishell(mshell);
-	exit(return_value);
+	free_and_exit(mshell, exit_value);
 }

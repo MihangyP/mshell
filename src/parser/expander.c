@@ -65,6 +65,13 @@ t_status	get_var(t_minishell *mshell, char **res, char *name, size_t *len)
     }
 	else
 	{
+		if (name[0] == 0)
+		{
+			*res = str_append(*res, "$", len);
+			return (SUCCESS);
+			if (!*res)
+				return (FAIL);
+		}
         value = get_env_value(mshell, name);
         if (value)
             *res = str_append(*res, value, len);
