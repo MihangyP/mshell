@@ -51,33 +51,6 @@ bool	make_env2(t_minishell *mshell)
 	return (1);
 }
 
-void print_cmd(t_cmd *cmd)
-{
-	t_cmd *curr;
-
-	curr = cmd;
-	while (curr->next != cmd)
-	{
-		printf("============\n");
-		printf("in: %d\n", curr->in);
-		printf("out: %d\n", curr->out);
-		printf("cmd_param: ");
-		for (int i = 0; cmd->cmd_param[i]; ++i)
-			printf(" %s", cmd->cmd_param[i]);
-		printf("\n");
-		printf("=============\n");
-		curr = curr->next;
-	}
-	printf("============\n");
-	printf("in: %d\n", curr->in);
-	printf("out: %d\n", curr->out);
-	printf("cmd_param: ");
-	for (int i = 0; cmd->cmd_param[i]; ++i)
-		printf(" %s", cmd->cmd_param[i]);
-	printf("\n");
-	printf("=============\n");
-}
-
 t_status	repl(t_minishell *mshell)
 {
 	char	*entry;

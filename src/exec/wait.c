@@ -1,42 +1,29 @@
 #include <minishell.h>
 
-size_t	len_cmd(t_cmd *list)
+void	wait_childrens(t_minishell *mshell)
 {
-	t_cmd	*tmp;
-	size_t	i;
+	t_cmd	*curr;
+	pid_t	pid;
+	int	wstatus;
 
-	if ((list))
+	curr = mshell->cmd;
+	while (curr->next != mshell->cmd)
 	{
-		tmp = list;
-		i = 1;
-		while (tmp->next != list)
-		{
-			++i;
-			tmp = tmp->next;
-		}
-		return (i);
+		pid = waitpid(-1, &wstatus, 0);
+		if (pid == g_pid && WIFEXITED(wstatus))
+			mshell->exit_code = WEXITSTATUS(wstatus);
+		if (curr->out >= 0)
+			close(curr->out);
+		if (curr->in >= 0)
+			close(curr->in);
+		curr = curr->next;
 	}
-	return (0);
+	pid = waitpid(-1, &wstatus, 0);
+	if (pid == g_pid && WIFEXITED(wstatus))
+		mshell->exit_code = WEXITSTATUS(wstatus);
+	if (curr->out >= 0)
+		close(curr->out);
+	if (curr->in >= 0)
+		close(curr->in);
 }
 
-void	wait_all(t_minishell *mshell)
-{
-	int		status;
-	int		pid;
-	int		len;
-	t_cmd	*tmp;
-
-	tmp = mshell->cmd;
-	len = len_cmd(tmp);
-	while (len--)
-	{
-		pid = waitpid(-1, &status, 0);
-		if (pid == g_pid && WIFEXITED(status))
-			mshell->exit_code = WEXITSTATUS(status);
-		if (tmp->out >= 0)
-			close(tmp->out);
-		if (tmp->in >= 0)
-			close(tmp->in);
-		tmp = tmp->next;
-	}
-}

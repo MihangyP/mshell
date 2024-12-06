@@ -151,7 +151,7 @@ void	redirect_in_out(t_minishell *mshell, t_cmd *cmd, int *pip);
 void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip);
 void	parent_process(t_minishell *mshell, t_cmd *cmd, int *pip);
 bool	cmd_exist(char **path, t_minishell *mshell, char *cmd);
-void	wait_all(t_minishell *mshell);
+void	wait_childrens(t_minishell *mshell);
 
 /* builtins */
 int		cd_minishell(t_minishell *mshell, char **params);

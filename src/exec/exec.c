@@ -58,52 +58,51 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	return (true);
 }
 
-bool	exec_cmd(t_minishell *mshell, t_cmd *cmd, int *pip)
+void	free_and_exit(t_minishell *mshell, int exit_code)
 {
+	free_minishell(mshell);
+	exit(exit_code);
+}
+
+t_status	exec_cmd(t_minishell *mshell, t_cmd *cmd)
+{
+	int	*fd;
+	
+	fd = mshell->pipefd;
+	if (pipe(fd) == -1)
+		return (FAIL);
 	g_pid = fork();
-	if (g_pid < 0)
-	{
-		free_minishell(mshell);
-		exit(1);
-	}
-	else if (!g_pid)
+	if (g_pid == 0)
 	{
 		if (cmd->cmd_param && cmd->cmd_param[0])
-			child_process(mshell, cmd, pip);
+			child_process(mshell, cmd, fd);
 		else
-		{
-			free_minishell(mshell);
-			exit(0);
-		}
+			free_and_exit(mshell, 0);
 	}
+	else if (g_pid > 0)
+		parent_process(mshell, cmd, fd);
 	else
-		parent_process(mshell, cmd, pip);
-	return (true);
+		free_and_exit(mshell, 1);
+	return (SUCCESS);
 }
 
 t_status	exec_minishell(t_minishell *mshell)
 {
-	t_cmd	*tmp;
-	int		*pip;
+	t_cmd	*curr;
 
-	pip = mshell->pipefd;
-	tmp = mshell->cmd;
-	// Simple command like env, pwd, echo Donto, export DONTO=DONTO ..
-	if (tmp && tmp->skip_cmd == false && tmp->next == tmp && tmp->cmd_param[0] \
-		&& is_builtin(tmp->cmd_param[0]))
-		return (launch_builtin(mshell, tmp));
-	//--------
-	if (pipe(pip) == -1)
+	curr = mshell->cmd;
+	if (curr && curr->next == curr && !curr->skip_cmd \
+		&& curr->cmd_param[0] && is_builtin(curr->cmd_param[0]))
+		return (launch_builtin(mshell, curr));
+	if (!exec_cmd(mshell, curr))
 		return (FAIL);
-	exec_cmd(mshell, tmp, pip);
-	tmp = tmp->next;
-	while (tmp != mshell->cmd)
+	curr = curr->next;
+	while (curr != mshell->cmd)
 	{
-		if (pipe(pip) == -1)
-			return (-1);
-		exec_cmd(mshell, tmp, pip);
-		tmp = tmp->next;
+		if (!exec_cmd(mshell, curr))
+			return (FAIL);
+		curr = curr->next;
 	}
-	wait_all(mshell);
+	wait_childrens(mshell);
 	return (SUCCESS);
 }
