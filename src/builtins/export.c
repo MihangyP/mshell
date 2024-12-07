@@ -43,6 +43,76 @@ bool	valid_identifier(char *str)
 	return (true);
 }
 
+char	*get_key(char *str)
+{
+	char	*tmp;
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		++i;
+	tmp = malloc((i + 1) * sizeof(char));
+	if (!tmp)
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		tmp[i] = str[i];
+		++i;
+	}
+	tmp[i] = '\0';
+	return (tmp);
+}
+
+bool	exist_in_env(char *key, t_lst *env)
+{
+	t_lst	*curr;
+	char	*env_key;
+
+	curr = env;
+	while (curr->next != env)
+	{
+		env_key = get_key(curr->text);	
+		if (!ft_strncmp(env_key, key, INT_MAX))
+			return (true);
+		curr = curr->next;
+	}
+	env_key = get_key(curr->text);	
+	if (!ft_strncmp(env_key, key, INT_MAX))
+		return (true);
+	return (false);
+}
+
+t_status	update_env_export(char *str, t_lst  **env)
+{
+	t_lst	*new_env;
+
+
+	*new = new_env;
+	return (SUCCESS);	
+}
+
+#if 1
+t_status	export(char *str, t_lst **env)
+{
+	char	*key = get_key(str);
+	if (!key)
+		return (FAIL);
+	if (exist_in_env(key, *env))
+	{
+		if (!update_env_export(str, env))
+			return (FAIL);
+	}
+	else
+	{
+		if (!lst_append(env, str))
+			return (FAIL);
+	}
+	return (SUCCESS);
+}
+#endif
+
+#if 0
 bool	export(char *str, t_lst **env)
 {
 	int		pos;
@@ -69,6 +139,7 @@ bool	export(char *str, t_lst **env)
 			return (false);
 	return (true);
 }
+#endif
 
 int	export_minishell(char **str, t_lst **env)
 {
