@@ -288,7 +288,7 @@ t_status	parsing_tokens(t_minishell *mshell)
 	curr = curr->next;
 	while (curr != mshell->token)
 	{
-		if (tmp->prev->id == PIPE)
+		if (curr->prev->id == PIPE)
 		{
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 				free_and_exit(mshell, 1);

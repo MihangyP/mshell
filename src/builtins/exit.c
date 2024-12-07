@@ -32,7 +32,7 @@ void	exit_minishell(t_minishell *mshell, char **av)
 	int		exit_value;
 
 	if (!av[1])
-		free_and_exit(mshell, exit_code);
+		free_and_exit(mshell, mshell->exit_code);
 	if (av[2])
 	{
 		print_error("exit: too many arguments\n");

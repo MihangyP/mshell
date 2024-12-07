@@ -158,7 +158,7 @@ void	wait_childrens(t_minishell *mshell);
 int		cd_minishell(t_minishell *mshell, char **params);
 int		echo_minishell(char **args);
 int		env_minishell(t_lst *env);
-void	exit_minishell(t_minishell *mshell, char **args);
+void		exit_minishell(t_minishell *mshell, char **args);
 int		export_minishell(char **str, t_lst **env);
 int		pwd_minishell(void);
 int		unset_minishell(char **str, t_lst **env);
