@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-//if export and no other args
 bool	export_no_args(t_lst *env)
 {
 	char	**arr;
@@ -28,7 +27,6 @@ bool	export_no_args(t_lst *env)
 	return (true);
 }
 
-//checks syntax
 bool	valid_identifier(char *str)
 {
 	int	i;
@@ -45,7 +43,6 @@ bool	valid_identifier(char *str)
 	return (true);
 }
 
-//export but norm
 bool	export(char *str, t_lst **env)
 {
 	int		pos;

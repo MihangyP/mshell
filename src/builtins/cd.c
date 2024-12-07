@@ -10,53 +10,6 @@ static int	count_arg(char **params)
 	return (count);
 }
 
-#if 0
-void	update_oldpwd(t_minishell *mshell)
-{
-	t_lst	*tmp;
-	char	*test;
-	int		len;
-
-	tmp = mshell->env;
-	test = NULL;
-	len = len_list(tmp);
-	while (len--)
-	{
-		if (ft_strncmp(tmp->text, "PWD=", 3) == 0)
-			test = tmp->text;
-		tmp = tmp->next;
-	}
-	if (!test)
-		export("OLDPWD", &mshell->env);
-	if (test)
-	{
-		test = ft_strjoin("OLD", test);
-		if (!test)
-			return (error_malloc());
-		export(test, &mshell->env);
-	}
-	free(test);
-}
-
-void	update_pwd(t_minishell *mshell)
-{
-	char	cwd[PATH_MAX];
-	char	*pwd;
-
-	update_oldpwd(mshell);
-	if (getcwd(cwd, PATH_MAX) == NULL)
-	{
-		strerror(errno);
-		return ;
-	}
-	pwd = ft_strjoin("PWD=", cwd);
-	if (!pwd)
-		return (error_malloc());
-	export(pwd, &mshell->env);
-	free(pwd);
-}
-#endif
-
 char	*get_text(t_minishell *mshell, char *text, char *opwd, char *pwd)
 {
 	char 	*str;
@@ -131,7 +84,7 @@ int	cd_minishell(t_minishell *mshell, char **params)
 		if (res == -1)
 			free_and_exit(mshell, 1);
 		if (!update_env(mshell, oldpwd, pwd))
-			return (1);
+			free_and_exit(mshell, 1);
 		return (res);
 	}
 	return (1);
