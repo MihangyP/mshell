@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:25:23 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:54:10 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_status	repl(t_minishell *mshell)
 {
 	char	*entry;
 
-	while (1)
+	while (true)
 	{
 		entry = readline("mshell> ");
 		if (!entry)

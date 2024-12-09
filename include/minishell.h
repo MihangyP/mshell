@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 17:17:03 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:41:16 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ bool		parsing_tokens(t_minishell *mshell);
 t_status	append_cmd(t_cmd **cmd, int infile, int outfile, char **cmd_param);
 bool		read_in_stdin(t_minishell *mshell, int fd, char *word);
 int			here_doc(t_minishell *mshell, char *word);
-int			open_file(t_minishell *mshell, char *filename, int type);
+int			open_file(t_minishell *mshell, char *filename, int id);
 int			count_args(t_minishell *mshell, t_token *token);
 void		*free_cmd_param(char **cmd, int i);
 int			add_to_cmd_param(char **cmd_param, int *i, char *str);

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 17:25:53 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:53:55 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 {
 	char	*buf;
 
-	while (1)
+	while (true)
 	{
 		buf = NULL;
 		buf = readline("> ");
@@ -31,7 +31,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 		if (!ft_strncmp(word, buf, INT_MAX))
 			break ;
 		if (!expand_entry(mshell, &buf))
-			free_minishell(mshell);
+			free_and_exit(mshell);
 		write(fd, buf, ft_strlen(buf));
 		write(fd, "\n", 1);
 		free(buf);
@@ -59,22 +59,21 @@ int	here_doc(t_minishell *mshell, char *word)
 	return (fd);
 }
 
-int	open_file(t_minishell *mshell, char *filename, int type)
+int	open_file(t_minishell *mshell, char *filename, int id)
 {
-	int	fd;
+	int	flag;
 
-	fd = -2;
-	if (type == INPUT)
-		fd = open(filename, O_RDONLY, 0644);
-	else if (type == HEREDOC)
-		fd = here_doc(mshell, filename);
-	else if (type == TRUNC)
-		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	else if (type == APPEND)
-		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (type != HEREDOC && fd < 0)
-		perror(filename);
-	return (fd);
+	if (id == INPUT)
+		flag = O_RDONLY;
+	else if (id == TRUNC)
+		flag = O_CREAT | O_WRONLY | O_TRUNC;
+	else if (id == APPEND)
+		flag = O_CREAT | O_WRONLY | O_APPEND;
+	else if (id == HEREDOC)
+		return (here_doc(mshell, filename));
+	else
+		return (-2);
+	return (open(filename, flag, 0644));
 }
 
 t_status	parsing(t_minishell *mshell, t_token *tmp)
