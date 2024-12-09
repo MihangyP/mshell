@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_tokens_get_functions.c                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/09 14:27:52 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/12/09 14:27:56 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 char	**get_param(t_minishell *mshell, t_token *token)
@@ -19,7 +31,7 @@ char	**get_param(t_minishell *mshell, t_token *token)
 	while (tmp != mshell->token && tmp->id != PIPE)
 	{
 		if ((tmp->id == CMD || (tmp->id == ARG && \
-						tmp->prev != mshell->token->prev && tmp->prev->id > 5)) && \
+			tmp->prev != mshell->token->prev && tmp->prev->id > 5)) && \
 				!add_to_cmd_param(cmd_param, &i, tmp->text))
 			return (free_cmd_param(cmd_param, i));
 		tmp = tmp->next;

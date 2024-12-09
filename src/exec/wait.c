@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wait.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/09 14:36:37 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/12/09 14:36:42 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 void	wait_childrens(t_minishell *mshell)
 {
 	t_cmd	*curr;
 	pid_t	pid;
-	int	wstatus;
+	int		wstatus;
 
 	curr = mshell->cmd;
 	while (curr->next != mshell->cmd)

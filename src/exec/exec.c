@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/09 14:34:31 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/12/09 14:34:38 by pmihangy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 bool	check_dir(char **path, char *cmd, t_minishell *mshell)
@@ -58,7 +70,7 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 t_status	exec_cmd(t_minishell *mshell, t_cmd *cmd)
 {
 	int	*fd;
-	
+
 	fd = mshell->pipefd;
 	if (pipe(fd) == -1)
 		return (FAIL);
