@@ -18,8 +18,8 @@ t_lst	*new_lst_element(char *str)
 t_status	lst_append(t_lst **env, char *str)
 {
 	t_lst	*new;
-	
-	new = new_lst_element(str);	
+
+	new = new_lst_element(str);
 	if (new == NULL)
 		return (FAIL);
 	if (*env == NULL)

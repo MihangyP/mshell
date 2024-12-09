@@ -19,7 +19,7 @@ bool	valid_identifier(char *str)
 char	*get_key(char *str)
 {
 	char	*tmp;
-	int	i;
+	int		i;
 
 	i = 0;
 	while (str[i] && str[i] != '=')
@@ -45,12 +45,12 @@ bool	exist_in_env(char *key, t_lst *env)
 	curr = env;
 	while (curr->next != env)
 	{
-		env_key = get_key(curr->text);	
+		env_key = get_key(curr->text);
 		if (!ft_strncmp(env_key, key, INT_MAX))
 			return (true);
 		curr = curr->next;
 	}
-	env_key = get_key(curr->text);	
+	env_key = get_key(curr->text);
 	if (!ft_strncmp(env_key, key, INT_MAX))
 		return (true);
 	return (false);
@@ -58,7 +58,7 @@ bool	exist_in_env(char *key, t_lst *env)
 
 char	*get_str(char *s, char *to_exp, char *key)
 {
-	char 	*str;
+	char	*str;
 
 	if (!ft_strncmp(get_key(s), key, INT_MAX))
 	{

@@ -12,18 +12,18 @@ static int	count_arg(char **params)
 
 static char	*get_text(t_minishell *mshell, char *text, char *opwd, char *pwd)
 {
-	char 	*str;
+	char	*str;
 
 	if (!ft_strncmp(text, "OLDPWD=", 7))
 	{
 		str = ft_strjoin("OLDPWD=", opwd);
-		if (!str)	
+		if (!str)
 			free_and_exit(mshell, 1);
 	}
 	else if (!ft_strncmp(text, "PWD=", 4))
 	{
 		str = ft_strjoin("PWD=", pwd);
-		if (!str)	
+		if (!str)
 			free_and_exit(mshell, 1);
 	}
 	else
@@ -63,11 +63,11 @@ t_status	update_env(t_minishell *mshell, char *oldpwd, char *pwd)
 
 int	cd_minishell(t_minishell *mshell, char **params)
 {
-	int	res;
-	int	arg_len;
+	int		res;
+	int		arg_len;
 	char	oldpwd[PATH_MAX];
 	char	pwd[PATH_MAX];
-	char 	*path;
+	char	*path;
 
 	arg_len = count_arg(params);
 	if (arg_len == 1 || arg_len == 2)

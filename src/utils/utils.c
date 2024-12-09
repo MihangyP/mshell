@@ -48,6 +48,6 @@ void	sort_array(char **arr, int len)
 			}
 			j++;
 		}
-	i++;
+		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/05 15:50:00 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/09 11:51:46 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,10 @@ void	free_minishell(t_minishell	*mshell)
 		unlink(".heredoc.tmp");
 }
 
-void	init_initial_env(t_minishell *mshell)
-{
-	char	path[PATH_MAX];
-	char	*str;
-
-	str = ft_strdup("OLDPWD");
-	if (!str || !lst_append(&(mshell->env), str))
-		free_and_exit(mshell, 1);
-	if (!getcwd(path, PATH_MAX))
-		free_and_exit(mshell, 1);
-	str = ft_strjoin("PWD=", path);
-	if (!str || !lst_append(&(mshell->env), str))
-		free_and_exit(mshell, 1);
-}
-
 t_status	repl(t_minishell *mshell)
 {
 	char	*entry;
 
-	listen_signals();
 	while (1)
 	{
 		entry = readline("mshell> ");
@@ -82,10 +66,7 @@ t_status	init_env(t_minishell *mshell, char **env)
 	char	*str;
 
 	if (*env == NULL)
-	{
-		init_initial_env(mshell);
 		return (SUCCESS);
-	}
 	i = 0;
 	while (env[i])
 	{
@@ -118,6 +99,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	init_minishell(&mshell);
+	listen_signals();
 	if (!init_env(&mshell, env) || !repl(&mshell))
 	{
 		free_minishell(&mshell);

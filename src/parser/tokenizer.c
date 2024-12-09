@@ -2,7 +2,7 @@
 
 void	token_dup(char *entry, int len, char *tmp)
 {
-	int 	i;
+	int		i;
 	int		j;
 	char	quote;
 
@@ -98,22 +98,22 @@ void	assign_operator(char **entry, char **op, int *op_type)
 	}
 }
 
-t_status insert_operator(t_token **root, char **entry)
+t_status	insert_operator(t_token **root, char **entry)
 {
-    char *operator;
-    int operator_type;
+	char	*operator;
+	int		operator_type;
 
 	operator = NULL;
 	operator_type = 0;
-    if (**entry == '<' || **entry == '>')
+	if (**entry == '<' || **entry == '>')
 		assign_operator(entry, &operator, &operator_type);
-    else if (**entry == '|')
-    {
-        operator = ft_strdup("|");
-        operator_type = PIPE;
-        (*entry)++;
-    }
-    if (operator && !add_token(root, operator, operator_type))
-        return (FAIL);
-    return (SUCCESS);
+	else if (**entry == '|')
+	{
+		operator = ft_strdup("|");
+		operator_type = PIPE;
+		(*entry)++;
+	}
+	if (operator && !add_token(root, operator, operator_type))
+		return (FAIL);
+	return (SUCCESS);
 }

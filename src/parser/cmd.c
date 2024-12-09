@@ -6,7 +6,7 @@
 /*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:35:08 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/28 12:43:31 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 13:21:13 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_status	append_cmd(t_cmd **cmd, int infile, int outfile, char **cmd_param)
 	new = new_cmd(infile, outfile, cmd_param);
 	if (!new)
 		return (FAIL);
-	if (*cmd == NULL) 
+	if (*cmd == NULL)
 	{
 		*cmd = new;
 		(*cmd)->prev = *cmd;

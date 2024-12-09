@@ -6,7 +6,7 @@
 /*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:38:45 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/11/28 11:38:46 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 13:50:31 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	print_token(t_token *token)
 	curr = token;
 	while (curr->next != token)
 	{
-		printf("text: %s, id: %d\n", curr->text, curr->id);	
+		printf("text: %s, id: %d\n", curr->text, curr->id);
 		curr = curr->next;
 	}
 	printf("text: %s, id: %d\n", curr->text, curr->id);

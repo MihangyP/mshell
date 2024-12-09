@@ -27,7 +27,7 @@ bool	export_no_args(t_lst *env)
 	return (true);
 }
 
-t_status	update_env_export(char *str, t_lst  **env)
+t_status	update_env_export(char *str, t_lst **env)
 {
 	t_lst	*new_env;
 	t_lst	*tmp;
@@ -54,7 +54,9 @@ t_status	update_env_export(char *str, t_lst  **env)
 
 t_status	export(char *str, t_lst **env)
 {
-	char	*key = get_key(str);
+	char	*key;
+
+	key = get_key(str);
 	if (!key)
 		return (FAIL);
 	if (!exist_in_env(key, *env))

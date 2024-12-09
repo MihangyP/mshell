@@ -20,7 +20,8 @@ static int	get_exit_value(char *str, bool *err)
 		num = num * 10 + (str[i++] - 48);
 	while (is_space(str[i]))
 		++i;
-	if (str[i] || i - start_index > 20 || ((neg == -1 && (num - 1) > LONG_MAX) || \
+	if (str[i] || i - start_index > 20 || \
+		((neg == -1 && (num - 1) > LONG_MAX) || \
 		(neg == 1 && (num > LONG_MAX))))
 		*err = true;
 	return ((int)((num * neg) % 256));

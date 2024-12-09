@@ -12,7 +12,7 @@ void	handle_sigint(int signum)
 
 void	listen_signals(void)
 {
-	signal(SIGINT, handle_sigint);	
+	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 }
 

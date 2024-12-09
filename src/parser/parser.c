@@ -6,29 +6,29 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/03 09:34:08 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:37:09 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-t_status expand_entry(t_minishell *mshell, char **entry)
+t_status	expand_entry(t_minishell *mshell, char **entry)
 {
-    char	*result;
-    size_t	result_len;
+	char	*result;
+	size_t	result_len;
 
 	result = NULL;
 	result_len = 0;
-    if (!mshell || !entry || !*entry)
-        return (FAIL);
-    if (process_input(mshell, *entry, &result, &result_len) == FAIL)
-    {
-        free(result);
-        return (FAIL);
-    }
-    free(*entry);
-    *entry = result;
-    return (SUCCESS);
+	if (!mshell || !entry || !*entry)
+		return (FAIL);
+	if (process_input(mshell, *entry, &result, &result_len) == FAIL)
+	{
+		free(result);
+		return (FAIL);
+	}
+	free(*entry);
+	*entry = result;
+	return (SUCCESS);
 }
 
 t_status	tokenize_entry(t_token **root, char *entry)
@@ -65,7 +65,7 @@ t_status	check_token_error(t_minishell *mshell)
 
 	err_message = NULL;
 	if (mshell->token && \
-	   (mshell->token->prev->id == PIPE || mshell->token->id == PIPE))
+		(mshell->token->prev->id == PIPE || mshell->token->id == PIPE))
 	{
 		err_message = ft_strdup("Syntax error\n");
 		if (!err_message)
@@ -87,11 +87,13 @@ t_status	parse_entry(t_minishell *mshell, char *entry)
 	if (!check_token_error(mshell))
 		return (FAIL);
 	if (mshell->token)
+	{
 		if (!parsing_tokens(mshell))
 		{
 			free_token(&mshell->token);
 			free_cmd(&mshell->cmd);
 			return (FAIL);
 		}
+	}
 	return (SUCCESS);
 }

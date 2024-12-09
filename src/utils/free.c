@@ -18,7 +18,7 @@ void	free_token(t_token **token)
 {
 	t_token	*curr;
 	t_token	*tmp;
-	
+
 	if (*token == NULL)
 		return ;
 	curr = *token;
@@ -69,7 +69,7 @@ void	free_env(t_lst **list)
 {
 	t_lst	*curr;
 	t_lst	*tmp;
-	
+
 	if (*list == NULL)
 		return ;
 	curr = *list;

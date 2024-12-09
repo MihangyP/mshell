@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 10:15:54 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:06:25 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,11 @@ bool	is_operator(char c);
 void	sort_array(char **arr, int len);
 bool	is_quote(char c);
 void	free_and_exit(t_minishell *mshell, int exit_code);
+void	init_quotes(t_quotes *quotes);
 
 /* */
 bool	print_error(char *str);
+bool	print_error_token(t_token *token, t_minishell *mshell);
 
 /* parser */
 t_status	parse_entry(t_minishell *mshell, char *entry);
@@ -137,8 +139,19 @@ t_status	add_token(t_token **token, char *text, int id);
 void	print_token(t_token *token);
 
 /* parsing tokens*/
-bool	parsing_tokens(t_minishell *mshell);
+bool		parsing_tokens(t_minishell *mshell);
 t_status	append_cmd(t_cmd **cmd, int infile, int outfile, char **cmd_param);
+bool	read_in_stdin(t_minishell *mshell, int fd, char *word);
+int	here_doc(t_minishell *mshell, char *word);
+int	open_file(t_minishell *mshell, char *filename, int type);
+int	count_args(t_minishell *mshell, t_token *token);
+void	*free_cmd_param(char **cmd, int i);
+int	add_to_cmd_param(char **cmd_param, int *i, char *str);
+char	**get_param(t_minishell *mshell, t_token *token);
+t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd);
+t_status	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell);
+t_status	get_outfile(t_token *token, t_cmd *cmd, t_minishell *mshell);
+t_status	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd);
 
 /* exec */
 bool	exec_minishell(t_minishell *mshell);
