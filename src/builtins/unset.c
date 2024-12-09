@@ -24,9 +24,29 @@ void	check_env(t_lst *tmp, t_lst **env)
 		(*env) = NULL;
 }
 
+t_lst	*get_tmp(t_lst *env, char *str)
+{
+	t_lst	*tmp;
+	t_lst	*curr;
+
+	tmp = NULL;
+	curr = env;
+	while (curr->next != env)
+	{
+		if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
+		{
+			tmp = curr;
+			break ;
+		}
+		curr = curr->next;
+	}
+	if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
+		tmp = curr;
+	return (tmp);
+}
+
 t_status	unset(char *str, t_lst **env)
 {
-	t_lst	*curr;
 	t_lst	*tmp;
 
 	if (!str || !(*str))
@@ -38,15 +58,7 @@ t_status	unset(char *str, t_lst **env)
 	}
 	if (!exist_in_env(str, *env))
 		return (FAIL);
-	curr = *env;
-	while (curr->next != *env)
-	{
-		if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
-			tmp = curr;
-		curr = curr->next;
-	}
-	if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
-		tmp = curr;
+	tmp = get_tmp(*env, str);
 	tmp->prev->next = tmp->next;
 	tmp->next->prev = tmp->prev;
 	free(tmp->text);
