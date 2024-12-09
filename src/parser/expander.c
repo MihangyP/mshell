@@ -14,7 +14,7 @@ char	*get_env_value(t_minishell *mshell, const char *key)
 		{
 			entry_key_len = ft_strchr(curr->text, '=') - curr->text;
 			if (entry_key_len == ft_strlen(key) && \
-					!ft_strncmp(curr->text, key, INT_MAX))
+					!ft_strncmp(curr->text, key, ft_strlen(key)))
 				return (ft_strchr(curr->text, '=') + 1);
 		}
 		curr = curr->next;
