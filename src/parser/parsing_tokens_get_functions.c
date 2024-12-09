@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:27:52 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:20:46 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:25:51 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,31 +38,6 @@ char	**get_param(t_minishell *mshell, t_token *token)
 	}
 	cmd_param[i] = NULL;
 	return (cmd_param);
-}
-
-t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
-{
-	if (tmp->id == INPUT)
-	{
-		if (cmd->in >= 0)
-			close(cmd->in);
-		if (tmp == tmp->next || tmp->next->id <= 5)
-			return (print_error_token(tmp, mshell));
-		cmd->in = open_file(mshell, tmp->next->text, INPUT);
-		if (cmd->in == -1)
-			return (FAIL);
-	}
-	else if (tmp->id == HEREDOC)
-	{
-		if (cmd->in >= 0)
-			close(cmd->in);
-		if (tmp == tmp->next || tmp->next->id <= 5)
-			return (print_error_token(tmp, mshell));
-		cmd->in = open_file(mshell, tmp->next->text, HEREDOC);
-		if (cmd->in == -1)
-			return (FAIL);
-	}
-	return (SUCCESS);
 }
 
 t_status	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
@@ -107,21 +82,39 @@ t_status	get_outfile(t_token *token, t_cmd *cmd, t_minishell *mshell)
 	return (SUCCESS);
 }
 
+t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
+{
+	if (tmp->id == INPUT || tmp->id == HEREDOC)
+	{
+		if (cmd->in >= 0)
+			close(cmd->in);
+		if (tmp == tmp->next || tmp->next->id <= 5)
+			return (print_error_token(tmp, mshell));
+		if (tmp->id == INPUT)
+			cmd->in = open_file(mshell, tmp->next->text, INPUT);
+		else
+			cmd->in = open_file(mshell, tmp->next->text, HEREDOC);
+		if (cmd->in == -1)
+			return (FAIL);
+	}
+	return (SUCCESS);
+}
+
 t_status	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
 {
-	t_token	*tmp;
+	t_token	*curr;
 
-	tmp = token;
-	if (tmp->id != PIPE && !get_in(mshell, tmp, cmd))
-		return (FAIL);
-	if (tmp->id == PIPE)
-		return (SUCCESS);
-	tmp = tmp->next;
-	while (tmp->id != PIPE && tmp != mshell->token)
+	curr = token;
+	while (curr->id != PIPE && curr->next != mshell->token)
 	{
-		if (!get_in(mshell, tmp, cmd))
+		if (!get_in(mshell, curr, cmd))
 			return (FAIL);
-		tmp = tmp->next;
+		curr = curr->next;
+	}
+	if (curr->id != PIPE)
+	{
+		if (!get_in(mshell, curr, cmd))
+			return (FAIL);
 	}
 	return (SUCCESS);
 }
