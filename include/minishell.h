@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/01 14:58:39 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:15:54 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,11 @@ int		echo_minishell(char **args);
 int		env_minishell(t_lst *env);
 void		exit_minishell(t_minishell *mshell, char **args);
 int		export_minishell(char **str, t_lst **env);
+bool	valid_identifier(char *str);
+char	*get_key(char *str);
+bool	exist_in_env(char *key, t_lst *env);
+char	*get_str(char *s, char *to_exp, char *key);
+t_status	fill_env_text(char *s1, char *s2, t_lst *new_env);
 int		pwd_minishell(void);
 int		unset_minishell(char **str, t_lst **env);
 

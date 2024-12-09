@@ -10,7 +10,7 @@ static int	count_arg(char **params)
 	return (count);
 }
 
-char	*get_text(t_minishell *mshell, char *text, char *opwd, char *pwd)
+static char	*get_text(t_minishell *mshell, char *text, char *opwd, char *pwd)
 {
 	char 	*str;
 

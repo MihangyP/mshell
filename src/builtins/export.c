@@ -27,72 +27,31 @@ bool	export_no_args(t_lst *env)
 	return (true);
 }
 
-bool	valid_identifier(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str[0] || (str[0] != '_' && !ft_isalpha(str[0])))
-		return (false);
-	while (str[i] && str[i] != '=')
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-char	*get_key(char *str)
-{
-	char	*tmp;
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		++i;
-	tmp = malloc((i + 1) * sizeof(char));
-	if (!tmp)
-		return (NULL);
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		tmp[i] = str[i];
-		++i;
-	}
-	tmp[i] = '\0';
-	return (tmp);
-}
-
-bool	exist_in_env(char *key, t_lst *env)
-{
-	t_lst	*curr;
-	char	*env_key;
-
-	curr = env;
-	while (curr->next != env)
-	{
-		env_key = get_key(curr->text);	
-		if (!ft_strncmp(env_key, key, INT_MAX))
-			return (true);
-		curr = curr->next;
-	}
-	env_key = get_key(curr->text);	
-	if (!ft_strncmp(env_key, key, INT_MAX))
-		return (true);
-	return (false);
-}
-
 t_status	update_env_export(char *str, t_lst  **env)
 {
 	t_lst	*new_env;
+	t_lst	*tmp;
+	t_lst	*curr;
 
-
-	*new = new_env;
-	return (SUCCESS);	
+	new_env = malloc(sizeof(t_lst));
+	if (!new_env)
+		return (FAIL);
+	tmp = new_env;
+	curr = *env;
+	while (curr->next != *env)
+	{
+		if (!fill_env_text(curr->text, str, new_env))
+			return (FAIL);
+		new_env = new_env->next;
+		curr = curr->next;
+	}
+	if (!fill_env_text(curr->text, str, new_env))
+		return (FAIL);
+	new_env->next = tmp;
+	*env = new_env;
+	return (SUCCESS);
 }
 
-#if 1
 t_status	export(char *str, t_lst **env)
 {
 	char	*key = get_key(str);
@@ -110,36 +69,6 @@ t_status	export(char *str, t_lst **env)
 	}
 	return (SUCCESS);
 }
-#endif
-
-#if 0
-bool	export(char *str, t_lst **env)
-{
-	int		pos;
-	int		i;
-	char	*value;
-
-	pos = exist(str, (*env));
-	value = ft_strdup(str);
-	if (!value)
-		return (false);
-	if (pos >= 0)
-	{
-		i = 0;
-		while (i < pos)
-		{
-			(*env) = (*env)->next;
-			i++;
-		}
-		free((*env)->text);
-		(*env)->text = value;
-	}
-	else if (pos == -1)
-		if (!lst_append(env, value))
-			return (false);
-	return (true);
-}
-#endif
 
 int	export_minishell(char **str, t_lst **env)
 {
