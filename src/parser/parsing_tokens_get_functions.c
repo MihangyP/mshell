@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_tokens_get_functions.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:27:52 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 14:27:56 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:20:46 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

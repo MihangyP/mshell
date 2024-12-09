@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antananariv>  +#+  +:+       +#+        */
+/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:50:23 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 14:08:19 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:19:24 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

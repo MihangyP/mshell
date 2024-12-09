@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
+/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 14:29:09 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:17:08 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_status	init_env(t_minishell *mshell, char **env)
 			free_env(&mshell->env);
 			return (FAIL);
 		}
+		free(str);
 		++i;
 	}
 	return (SUCCESS);
