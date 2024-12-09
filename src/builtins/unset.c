@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-//syntax
 bool	syntax(char *str)
 {
 	int	i;
@@ -17,35 +16,6 @@ bool	syntax(char *str)
 	return (true);
 }
 
-//checks if identifier already in env
-int	exist(char *str, t_lst *env)
-{
-	int		i;
-	int		j;
-	t_lst	*tmp;
-
-	if (!env)
-		return (-1);
-	i = 0;
-	while (str[i])
-		i++;
-	j = 0;
-	tmp = env;
-	if (!ft_strncmp(tmp->text, str, i))
-		return (j);
-	tmp = tmp->next;
-	j++;
-	while (tmp != env)
-	{
-		if (!ft_strncmp(tmp->text, str, i))
-			return (j);
-		tmp = tmp->next;
-		j++;
-	}
-	return (-1);
-}
-
-
 void	check_env(t_lst *tmp, t_lst **env)
 {
 	if (tmp == (*env))
@@ -54,33 +24,36 @@ void	check_env(t_lst *tmp, t_lst **env)
 		(*env) = NULL;
 }
 
-bool	unset(char *str, t_lst **env)
+t_status	unset(char *str, t_lst **env)
 {
-	int		pos;
-	int		i;
+	t_lst	*curr;
 	t_lst	*tmp;
 
 	if (!str || !(*str))
-		return (false);
+		return (FAIL);
 	if (!syntax(str))
 	{
 		print_error("unset: invalid identifier\n");
-		return (true);
+		return (SUCCESS);
 	}
-	pos = exist(str, (*env));
-	if (pos == -1)
-		return (false);
-	tmp = (*env);
-	i = 0;
-	while (i++ < pos)
-		tmp = tmp->next;
+	if (!exist_in_env(str, *env))
+		return (FAIL);
+	curr = *env;
+	while (curr->next != *env)
+	{
+		if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
+			tmp = curr;
+		curr = curr->next;
+	}
+	if (!ft_strncmp(str, get_key(curr->text), INT_MAX))
+		tmp = curr;
 	tmp->prev->next = tmp->next;
 	tmp->next->prev = tmp->prev;
 	free(tmp->text);
 	check_env(tmp, env);
 	free(tmp);
 	tmp = NULL;
-	return (false);
+	return (SUCCESS);
 }
 
 int	unset_minishell(char **str, t_lst **env)
@@ -92,7 +65,7 @@ int	unset_minishell(char **str, t_lst **env)
 	i = 0;
 	while (str[i])
 	{
-		if (unset(str[i], env))
+		if (!unset(str[i], env))
 			exit_code = 1;
 		i++;
 	}
