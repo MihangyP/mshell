@@ -60,7 +60,7 @@ char	*get_str(char *s, char *to_exp, char *key)
 {
 	char 	*str;
 
-	if (!ft_strncmp(get_key(s), key, ft_strlen(key)))
+	if (!ft_strncmp(get_key(s), key, INT_MAX))
 	{
 		str = ft_strdup(to_exp);
 		if (!str)

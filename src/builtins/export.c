@@ -57,15 +57,18 @@ t_status	export(char *str, t_lst **env)
 	char	*key = get_key(str);
 	if (!key)
 		return (FAIL);
-	if (exist_in_env(key, *env))
+	if (!exist_in_env(key, *env))
 	{
-		if (!update_env_export(str, env))
+		if (!lst_append(env, str))
 			return (FAIL);
 	}
 	else
 	{
-		if (!lst_append(env, str))
-			return (FAIL);
+		if (ft_strchr(str, '='))
+		{
+			if (!update_env_export(str, env))
+				return (FAIL);
+		}
 	}
 	return (SUCCESS);
 }
