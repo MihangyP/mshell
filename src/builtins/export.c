@@ -41,26 +41,30 @@ bool	export_no_args(t_lst *env)
 
 t_status	update_env_export(char *str, t_lst **env)
 {
-	t_lst	*new_env;
-	t_lst	*tmp;
-	t_lst	*curr;
+	t_lst *new_env;
+	t_lst *tmp;
+	t_lst *curr;
 
 	new_env = malloc(sizeof(t_lst));
 	if (!new_env)
 		return (FAIL);
 	tmp = new_env;
 	curr = *env;
-	while (curr->next != *env)
-	{
+	while (curr->next != *env) {
 		if (!fill_env_text(curr->text, str, new_env))
-			return (FAIL);
+			return (free(new_env), FAIL);
+		new_env->next = malloc(sizeof(t_lst));
+		if (!new_env->next)
+			return (free(new_env), FAIL);
+		new_env->next->prev = new_env;
 		new_env = new_env->next;
 		curr = curr->next;
 	}
 	if (!fill_env_text(curr->text, str, new_env))
-		return (FAIL);
+		return (free(new_env), FAIL);
 	new_env->next = tmp;
-	*env = new_env;
+	tmp->prev = new_env;
+	*env = tmp;
 	return (SUCCESS);
 }
 
