@@ -31,7 +31,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 		if (!ft_strncmp(word, buf, INT_MAX))
 			break ;
 		if (!expand_entry(mshell, &buf))
-			free_and_exit(mshell);
+			free_and_exit(mshell, 1);
 		write(fd, buf, ft_strlen(buf));
 		write(fd, "\n", 1);
 		free(buf);

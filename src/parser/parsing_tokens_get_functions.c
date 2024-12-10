@@ -42,23 +42,16 @@ char	**get_param(t_minishell *mshell, t_token *token)
 
 t_status	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
 {
-	if (tmp->id == TRUNC)
+	if (tmp->id == TRUNC || tmp->id == APPEND)
 	{
 		if (cmd->out >= 0)
 			close(cmd->out);
 		if (tmp == tmp->next || tmp->next->id <= 5)
 			return (print_error_token(tmp, mshell));
-		cmd->out = open_file(NULL, tmp->next->text, TRUNC);
-		if (cmd->out == -1)
-			return (FAIL);
-	}
-	else if (tmp->id == APPEND)
-	{
-		if (cmd->out >= 0)
-			close(cmd->out);
-		if (tmp == tmp->next || tmp->next->id <= 5)
-			return (print_error_token(tmp, mshell));
-		cmd->out = open_file(NULL, tmp->next->text, APPEND);
+		if (tmp->id == TRUNC)
+			cmd->out = open_file(NULL, tmp->next->text, TRUNC);
+		else
+			cmd->out = open_file(NULL, tmp->next->text, APPEND);
 		if (cmd->out == -1)
 			return (FAIL);
 	}
