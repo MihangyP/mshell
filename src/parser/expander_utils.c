@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:50:23 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:19:24 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:55:05 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@ t_status	chop_var(t_minishell *mshell, char **res, size_t *len, char **input)
 
 	var_len = 0;
 	ft_bzero(var_name, sizeof(var_name));
+	if (!(ft_isalpha(**input) || ft_isdigit(**input) || **input == '_'))
+	{
+		*res = str_append(*res, "$", len);
+		if (!*res)
+			return (FAIL);
+		return (SUCCESS);
+	}
 	if (**input == '?' || ft_isdigit(**input))
 		var_name[var_len++] = *(*input)++;
 	else
