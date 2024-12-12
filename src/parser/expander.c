@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:24:30 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/11 13:43:08 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:22:40 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,40 +78,6 @@ t_status	get_var(t_minishell *mshell, char **res, char *name, size_t *len)
 {
 	char	*value;
 
-	// Gestion du cas spécial pour $?
-	if (!ft_strncmp(name, "?", 1))
-	{
-		if (!get_question_mark(mshell, res, len))
-			return (FAIL);
-		return (SUCCESS);
-	}
-
-	// Si le nom est vide, ajouter simplement "$"
-	if (name[0] == '\0')
-	{
-		*res = str_append(*res, "$", len);
-		if (!*res)
-			return (FAIL);
-		return (SUCCESS);
-	}
-
-	// Récupérer la valeur de la variable d'environnement
-	value = get_env_value(mshell, name);
-	if (value)
-		*res = str_append(*res, value, len);
-	else
-		*res = str_append(*res, "", len);
-	if (!*res)
-		return (FAIL);
-
-	return (SUCCESS);
-}
-
-#if 0
-t_status	get_var(t_minishell *mshell, char **res, char *name, size_t *len)
-{
-	char	*value;
-
 	if (!ft_strncmp(name, "?", 1))
 	{
 		if (!get_question_mark(mshell, res, len))
@@ -119,13 +85,6 @@ t_status	get_var(t_minishell *mshell, char **res, char *name, size_t *len)
 	}
 	else
 	{
-		if (name[0] == 0)
-		{
-			*res = str_append(*res, "$", len);
-			return (SUCCESS);
-			if (!*res)
-				return (FAIL);
-		}
 		value = get_env_value(mshell, name);
 		if (value)
 			*res = str_append(*res, value, len);
@@ -136,4 +95,3 @@ t_status	get_var(t_minishell *mshell, char **res, char *name, size_t *len)
 	}
 	return (SUCCESS);
 }
-#endif

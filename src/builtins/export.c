@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:03 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:18:26 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/12 10:16:17 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	export_minishell(char **str, t_lst **env)
 	{
 		if (!valid_identifier(str[i]))
 		{
-			print_error("export: invalid identifier\n");
+			print_error("export: not a valid identifier\n");
 			exit_code = 1;
 		}
 		else if (!export(str[i], env))

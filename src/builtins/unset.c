@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:18:52 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/12 11:09:25 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ t_status	unset(char *str, t_lst **env)
 		return (FAIL);
 	if (!syntax(str))
 	{
-		print_error("unset: invalid identifier\n");
-		return (SUCCESS);
+		print_error("unset: not a valid identifier\n");
+		return (FAIL);
 	}
 	if (!exist_in_env(str, *env))
-		return (FAIL);
+		return (SUCCESS);
 	tmp = get_tmp(*env, str);
 	tmp->prev->next = tmp->next;
 	tmp->next->prev = tmp->prev;
@@ -87,6 +87,8 @@ int	unset_minishell(char **str, t_lst **env)
 
 	exit_code = 0;
 	i = 0;
+	if (!str[1])
+		return (exit_code);
 	while (str[i])
 	{
 		if (!unset(str[i], env))

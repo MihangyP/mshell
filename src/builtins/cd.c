@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:32:33 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:17:49 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/12 11:03:58 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,19 @@ int	cd_minishell(t_minishell *mshell, char **params)
 		if (!getcwd(oldpwd, PATH_MAX))
 			free_and_exit(mshell, 1);
 		res = chdir(path);
-		if (!getcwd(pwd, PATH_MAX) || res == -1)
-			free_and_exit(mshell, 1);
 		if (res == -1)
+			return (perror(path), 1);
+		if (!getcwd(pwd, PATH_MAX))
 			free_and_exit(mshell, 1);
 		if (!update_env(mshell, oldpwd, pwd))
 			free_and_exit(mshell, 1);
 		return (res);
+	}
+	else
+	{
+		print_error(params[0]);
+		print_error(": ");
+		print_error("too many arguments\n");
 	}
 	return (1);
 }
