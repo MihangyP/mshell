@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 17:53:55 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/13 11:14:42 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ int	here_doc(t_minishell *mshell, char *word)
 
 int	open_file(t_minishell *mshell, char *filename, int id)
 {
-	int	flag;
+	int		flag;
+	int		fd;
 
 	if (id == INPUT)
 		flag = O_RDONLY;
@@ -73,7 +74,10 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 		return (here_doc(mshell, filename));
 	else
 		return (-2);
-	return (open(filename, flag, 0644));
+	fd = open(filename, flag, 0644);
+	if (fd == -1)
+		perror(filename);
+	return (fd);
 }
 
 t_status	parsing(t_minishell *mshell, t_token *tmp)
@@ -112,7 +116,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 		free_and_exit(mshell, 1);
 	if (!parsing(mshell, curr))
-		return (mshell->exit_code = 2, FAIL);
+	{
+		mshell->exit_code = 1;
+		return (FAIL);
+	}
 	curr = curr->next;
 	while (curr != mshell->token)
 	{
@@ -121,7 +128,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 				free_and_exit(mshell, 1);
 			if (!parsing(mshell, curr))
-				return (mshell->exit_code = 2, FAIL);
+			{
+				mshell->exit_code = 1;
+				return (FAIL);
+			}
 		}
 		curr = curr->next;
 	}

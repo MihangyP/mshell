@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:50:23 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 16:30:52 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/13 09:29:48 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_status	process_quotes(char **input, char **res, size_t *len, t_quotes *q)
 	return (SUCCESS);
 }
 
+// "> >> < * ? [ ] | ; [ ] || && ( ) & # $ \ <<
 t_status	process_input(t_minishell *mshell, char *s, char **res, size_t *len)
 {
 	t_quotes	quotes;
@@ -80,15 +81,15 @@ t_status	process_input(t_minishell *mshell, char *s, char **res, size_t *len)
 	while (*s)
 	{
 		if ((*s == '\'' || *s == '"') && \
-			!process_quotes(&s, res, len, &quotes))
+			!process_quotes(&s, res, len, &quotes) && *s)
 			return (FAIL);
-		else if (*s == '$' && !quotes.in_single_quote)
+		else if (*s && *s == '$' && !quotes.in_single_quote)
 		{
 			s++;
 			if (!chop_var(mshell, res, len, &s))
 				return (FAIL);
 		}
-		else
+		else if (*s)
 		{
 			tmp[0] = *(s++);
 			tmp[1] = '\0';

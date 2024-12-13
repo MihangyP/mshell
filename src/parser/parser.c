@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 16:29:13 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/13 09:57:22 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,8 @@ t_status	check_token_error(t_minishell *mshell)
 
 t_status	parse_entry(t_minishell *mshell, char *entry)
 {
-	printf("%s\n", entry);
 	if (!expand_entry(mshell, &entry))
 		free_and_exit(mshell, 1);
-	printf("%s\n", entry);
-	exit(1);
 	if (!tokenize_entry(&mshell->token, entry))
 		free_and_exit(mshell, 1);
 	free(entry);
