@@ -111,6 +111,7 @@ void		sort_array(char **arr, int len);
 bool		is_quote(char c);
 void		free_and_exit(t_minishell *mshell, int exit_code);
 void		init_quotes(t_quotes *quotes);
+int		len_cmd(t_cmd *cmd);
 
 /* */
 bool		print_error(char *str);

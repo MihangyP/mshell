@@ -22,8 +22,16 @@ void	wait_childrens(t_minishell *mshell)
 	while (curr->next != mshell->cmd)
 	{
 		pid = waitpid(-1, &wstatus, 0);
-		if (pid == g_pid && WIFEXITED(wstatus))
-			mshell->exit_code = WEXITSTATUS(wstatus);
+		if (pid == g_pid)
+		{
+			if (WIFEXITED(wstatus))
+			{
+				if (len_cmd(mshell->cmd) > 1)
+					mshell->exit_code = WEXITSTATUS(wstatus);
+				//if (mshell->exit_code != 1)
+				//	mshell->exit_code = WEXITSTATUS(wstatus);
+			}
+		}
 		if (curr->out >= 0)
 			close(curr->out);
 		if (curr->in >= 0)
@@ -31,8 +39,16 @@ void	wait_childrens(t_minishell *mshell)
 		curr = curr->next;
 	}
 	pid = waitpid(-1, &wstatus, 0);
-	if (pid == g_pid && WIFEXITED(wstatus))
-		mshell->exit_code = WEXITSTATUS(wstatus);
+	if (pid == g_pid)
+	{
+		if (WIFEXITED(wstatus))
+		{
+			if (len_cmd(mshell->cmd) > 1)
+				mshell->exit_code = WEXITSTATUS(wstatus);
+			//if (mshell->exit_code != 1)
+			//	mshell->exit_code = WEXITSTATUS(wstatus);
+		}
+	}
 	if (curr->out >= 0)
 		close(curr->out);
 	if (curr->in >= 0)

@@ -63,9 +63,7 @@ t_status	insert_cmd_arg(t_token **root, char **entry)
 	char	*tmp;
 	int		len;
 	int		quotes;
-	int		i;
 
-	i = 0;
 	quotes = 0;
 	len = cmd_arg_len(*entry, &quotes);
 	tmp = malloc((len - (2 * quotes) + 1) * sizeof(char));

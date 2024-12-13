@@ -76,14 +76,18 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 		return (-2);
 	fd = open(filename, flag, 0644);
 	if (fd == -1)
+	{
+		mshell->exit_code = 1;
 		perror(filename);
+	}
 	return (fd);
 }
 
 t_status	parsing(t_minishell *mshell, t_token *tmp)
 {
-	if (!get_infile(mshell, tmp, mshell->cmd->prev) && \
-			mshell->cmd->prev->in != -1)
+	bool	infile = get_infile(mshell, tmp, mshell->cmd->prev);
+
+	if (!infile && mshell->cmd->prev->in != -1)
 		return (FAIL);
 	if (mshell->cmd->prev->in == -1)
 	{
@@ -116,10 +120,7 @@ t_status	parsing_tokens(t_minishell *mshell)
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 		free_and_exit(mshell, 1);
 	if (!parsing(mshell, curr))
-	{
-		mshell->exit_code = 1;
 		return (FAIL);
-	}
 	curr = curr->next;
 	while (curr != mshell->token)
 	{
@@ -128,10 +129,7 @@ t_status	parsing_tokens(t_minishell *mshell)
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 				free_and_exit(mshell, 1);
 			if (!parsing(mshell, curr))
-			{
-				mshell->exit_code = 1;
 				return (FAIL);
-			}
 		}
 		curr = curr->next;
 	}

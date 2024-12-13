@@ -14,6 +14,20 @@
 
 pid_t	g_pid;
 
+int	len_cmd(t_cmd *cmd)
+{
+	t_cmd	*curr = cmd;
+	int	counter = 0;
+
+	while (curr->next != cmd)
+	{
+		++counter;
+		curr = curr->next;
+	}
+	++counter;
+	return (counter);
+}
+
 void	free_minishell(t_minishell	*mshell)
 {
 	if (mshell->token)
