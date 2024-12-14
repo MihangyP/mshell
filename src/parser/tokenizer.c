@@ -14,6 +14,37 @@
 
 void	token_dup(char *entry, int len, char *tmp)
 {
+	int j;
+	int	i;
+
+	j = 0;
+	i = 0;
+	while (entry[i + j] && i < len)
+	{
+		if (entry[i + j] == '\'' && ++j)
+		{
+			while (entry[i + j] != '\'' && ++i)
+				tmp[i - 1] = entry[(i - 1) + j];
+			j++;
+		}
+		else if (entry[i + j] == '"' && ++j)
+		{
+			while (entry[i + j] != '"' && ++i)
+				tmp[i - 1] = entry[(i - 1) + j];
+			j++;
+		}
+		else
+		{
+			tmp[i] = entry[i + j];
+			i++;
+		}
+	}
+	tmp[i] = 0;
+}
+
+#if 0
+void	token_dup(char *entry, int len, char *tmp)
+{
 	int		i;
 	int		j;
 	char	quote;
@@ -34,7 +65,37 @@ void	token_dup(char *entry, int len, char *tmp)
 	}
 	tmp[j] = '\0';
 }
+#endif
 
+int	cmd_arg_len(char *entry, int *quotes)
+{
+	int i;
+
+	i = 0;
+	*quotes = 0;
+	while (entry[i] && !is_space(entry[i]) && !is_operator(entry[i]))
+	{
+		if (entry[i] == '"' || entry[i] == '\'')
+		{
+			(*quotes)++;
+			if (entry[i++] == '"')
+				while (entry[i] && entry[i] != '"')
+					++i;
+			else
+				while (entry[i] && entry[i] != '\'')
+					++i;
+			if (entry[i])
+				++i;
+		}
+		if (entry[i] && entry[i] != '"' && entry[i] != '\'' && \
+				!is_space(entry[i]) && !is_operator(entry[i]))
+			++i;
+	}
+	return (i);
+
+}
+
+#if 0
 int	cmd_arg_len(char *entry, int *quotes)
 {
 	int		i;
@@ -57,6 +118,7 @@ int	cmd_arg_len(char *entry, int *quotes)
 	}
 	return (i);
 }
+#endif
 
 t_status	insert_cmd_arg(t_token **root, char **entry)
 {

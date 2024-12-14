@@ -41,7 +41,7 @@ t_status	tokenize_entry(t_token **root, char *entry)
 		{
 			if (!insert_cmd_arg(root, &entry))
 			{
-				if (root)
+				if (*root)
 					free_token(root);
 				return (FAIL);
 			}
@@ -50,7 +50,7 @@ t_status	tokenize_entry(t_token **root, char *entry)
 		{
 			if (!insert_operator(root, &entry))
 			{
-				if (root)
+				if (*root)
 					free_token(root);
 				return (FAIL);
 			}

@@ -10,20 +10,21 @@
 #                                                                              #
 # **************************************************************************** #
 
-## ARGUMENTS
+## GLOBAL VARIABLES
 NAME = minishell
 SRC = main.c 
-SRC_FILES = $(addprefix src/, $(SRC))
 UTILS_FILES = error.c free.c lst.c signals.c utils.c utils2.c
 PARSER_FILES = parser.c tokenizer.c tokenizer_utils.c parsing_tokens.c  \
 			   parsing_tokens_get_functions.c parsing_tokens_utils.c \
 			   expander.c expander_utils.c cmd.c
 EXEC_FILES = exec.c find_cmd.c builtins.c process.c wait.c
 BUILTINS_FILES = cd.c pwd.c exit.c echo.c export.c export_utils.c unset.c env.c
+SRC_FILES = $(addprefix src/, $(SRC))
 SRC_FILES += $(addprefix src/utils/, $(UTILS_FILES))
 SRC_FILES += $(addprefix src/parser/, $(PARSER_FILES))
 SRC_FILES += $(addprefix src/exec/, $(EXEC_FILES))
 SRC_FILES += $(addprefix src/builtins/, $(BUILTINS_FILES))
+HEADER_FILE = ./include/minishell.h
 CC = gcc -g
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
@@ -34,7 +35,7 @@ LINKING = -L$(LIBFT) -lft -lreadline
 ## RULES
 all: $(NAME)
 
-$(NAME): $(SRC_FILES)
+$(NAME): $(SRC_FILES) $(HEADER_FILE)
 	make -C $(LIBFT)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_FILES) -o $(NAME) $(LINKING)
 
