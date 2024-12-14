@@ -76,10 +76,7 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 		return (-2);
 	fd = open(filename, flag, 0644);
 	if (fd == -1)
-	{
-		mshell->exit_code = 1;
 		perror(filename);
-	}
 	return (fd);
 }
 

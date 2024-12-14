@@ -53,7 +53,11 @@ t_status	get_out(t_token *tmp, t_cmd *cmd, t_minishell *mshell)
 		else
 			cmd->out = open_file(NULL, tmp->next->text, APPEND);
 		if (cmd->out == -1)
+		{
+			mshell->exit_code = 1;
+			mshell->redirection_error = 1;
 			return (FAIL);
+		}
 	}
 	return (SUCCESS);
 }
@@ -88,7 +92,11 @@ t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 		else
 			cmd->in = open_file(mshell, tmp->next->text, HEREDOC);
 		if (cmd->in == -1)
+		{
+			mshell->exit_code = 1;
+			mshell->redirection_error = 1;
 			return (FAIL);
+		}
 	}
 	return (SUCCESS);
 }

@@ -102,6 +102,7 @@ void	init_minishell(t_minishell *mshell)
 	mshell->env = NULL;
 	mshell->cmd = NULL;
 	mshell->exit_code = 0;
+	mshell->redirection_error = 0;
 	mshell->pipefd[0] = -1;
 	mshell->pipefd[1] = -1;
 	g_pid = 0;

@@ -80,8 +80,8 @@ typedef struct s_minishell
 	t_lst	*env;
 	t_cmd	*cmd;
 	int		exit_code;
+	int		redirection_error;
 	int		pipefd[2];
-	bool	sq;
 }	t_minishell;
 
 /* error */
