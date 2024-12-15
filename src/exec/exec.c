@@ -97,15 +97,18 @@ t_status	exec_minishell(t_minishell *mshell)
 	if (curr && curr->next == curr && !curr->skip_cmd \
 		&& curr->cmd_param[0] && is_builtin(curr->cmd_param[0]))
 		return (launch_builtin(mshell, curr));
-	if (!exec_cmd(mshell, curr))
-		return (FAIL);
-	curr = curr->next;
-	while (curr != mshell->cmd)
+	if (mshell->cmd)
 	{
 		if (!exec_cmd(mshell, curr))
 			return (FAIL);
 		curr = curr->next;
-	}
-	wait_childrens(mshell);
+		while (curr != mshell->cmd)
+		{
+			if (!exec_cmd(mshell, curr))
+				return (FAIL);
+			curr = curr->next;
+		}
+		wait_childrens(mshell);
+	}	
 	return (SUCCESS);
 }
