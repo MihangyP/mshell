@@ -30,7 +30,7 @@ CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 INCLUDE = -I./include -I./libft
 LIBFT = ./libft
-LINKING = -L$(LIBFT) -lft -lreadline
+LINKING = -L$(LIBFT) -lft -lreadline -lhistory
 
 ## RULES
 all: $(NAME)

@@ -26,19 +26,27 @@ bool	is_builtin(char *cmd)
 
 void	exec_builtin(int save_stdout, t_minishell *mshell, t_cmd *cmd)
 {
-	if (!ft_strncmp("echo", cmd->cmd_param[0], 69))
+	if (!ft_strncmp("echo", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = echo_minishell(cmd->cmd_param);
-	else if (!ft_strncmp("cd", cmd->cmd_param[0], 69))
+	else if (!ft_strncmp("cd", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = cd_minishell(mshell, cmd->cmd_param);
-	else if (!ft_strncmp("pwd", cmd->cmd_param[0], 69))
+	else if (!ft_strncmp("pwd", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = pwd_minishell();
-	else if (!ft_strncmp("export", cmd->cmd_param[0], 69))
+	else if (!ft_strncmp("export", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = export_minishell(cmd->cmd_param, &mshell->env);
-	else if (!ft_strncmp("unset", cmd->cmd_param[0], 69))
+	else if (!ft_strncmp("unset", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = unset_minishell(cmd->cmd_param, &mshell->env);
-	else if (!ft_strncmp("env", cmd->cmd_param[0], 69))
-		mshell->exit_code = env_minishell(mshell->env);
-	else if (!ft_strncmp("exit", cmd->cmd_param[0], 69))
+	else if (!ft_strncmp("env", cmd->cmd_param[0], INT_MAX))
+	{
+		if (cmd->cmd_param[1])
+		{
+			write(2, "No such file or directory\n", 26);
+			mshell->exit_code = 127;		
+		}
+		else
+			mshell->exit_code = env_minishell(mshell->env);
+	}
+	else if (!ft_strncmp("exit", cmd->cmd_param[0], INT_MAX))
 	{
 		if (cmd->out >= 0)
 		{
