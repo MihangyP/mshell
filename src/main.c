@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 12:04:06 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/16 14:29:57 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_status	repl(t_minishell *mshell, int fd)
 		if (!entry)
 		{
 			printf("exit\n");
+			close(fd);
 			return (free_minishell(mshell), FAIL);
 		}
 		if (has_open_quote(entry, false, 0))

@@ -6,7 +6,7 @@
 /*   By: irazafim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:03:37 by irazafim          #+#    #+#             */
-/*   Updated: 2024/12/16 12:16:30 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/16 14:21:58 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,39 +35,28 @@ int open_history_file(void)
     return (fd);
 }
 
-void    save_history(char *entry, int old_fd)
+void    save_history(char *entry, int fd)
 {
     char    *to_append;
-    int     fd;
 
-    close(old_fd);
-    fd = open(HISTORY_FILE, O_WRONLY | O_APPEND);
-    if (fd < 0)
-        exit(1);
     to_append = ft_strjoin(entry, "\n");
     if (!to_append)
         exit(1);
     write(fd, to_append, ft_strlen(to_append));
     free(to_append);
-    close(fd);
 }
 
-void    load_history(int old_fd)
+void    load_history(int fd)
 {
-    int     fd;
     char    **arr;
 	char	*s;
     int     i;
 	struct stat	file_stat;
 
-    close(old_fd);
 	stat(HISTORY_FILE, &file_stat);
 	s = malloc(file_stat.st_size * sizeof(char));
 	if (!s)
 		exit(1);
-    fd = open(HISTORY_FILE, O_RDONLY);
-    if (fd < 1)
-        exit(1);
     if (read(fd, s, file_stat.st_size) == -1)
 		exit(1);
     arr = ft_split(s, '\n');
@@ -77,5 +66,4 @@ void    load_history(int old_fd)
     while (arr[++i])
 		add_history(arr[i]);
 	free_arr(arr);
-	close(fd);
 }
