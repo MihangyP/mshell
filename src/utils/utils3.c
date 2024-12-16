@@ -1,23 +1,62 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: pmihangy <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/04 10:25:42 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 15:59:45 by pmihangy         ###   ########.fr       */
+/*   Created: 2024/12/16 15:59:02 by pmihangy          #+#    #+#             */
+/*   Updated: 2024/12/16 16:08:29 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <minishell.h>
 
-char	*insert_in_tmp_str(char *tmp_str, char *str, int fd)
+#if 1
+int	my_has_line_break(char *str)
+{
+	int	i;
+
+	if (NULL == str)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	my_count_next_line_size(char *tmp)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	if (NULL == tmp)
+		return (0);
+	while (tmp[i])
+	{
+		if (tmp[i] == '\n')
+		{
+			count++;
+			break ;
+		}
+		count++;
+		i++;
+	}
+	return (count);
+}
+
+char	*my_insert_in_tmp_str(char *tmp_str, char *str, int fd)
 {
 	int		bytes_rd;
 
 	bytes_rd = 1;
-	while (!has_line_break(tmp_str) && bytes_rd != 0)
+	while (!my_has_line_break(tmp_str) && bytes_rd != 0)
 	{
 		bytes_rd = read(fd, str, BUFFER_SIZE);
 		if (bytes_rd == -1)
@@ -39,7 +78,7 @@ char	*insert_in_tmp_str(char *tmp_str, char *str, int fd)
 	return (tmp_str);
 }
 
-char	*extract_str_line(char *tmp)
+char	*my_extract_str_line(char *tmp)
 {
 	int		size;
 	int		i;
@@ -47,7 +86,7 @@ char	*extract_str_line(char *tmp)
 
 	if (NULL == tmp || *tmp == '\0')
 		return (NULL);
-	size = count_next_line_size(tmp);
+	size = my_count_next_line_size(tmp);
 	if (0 == size)
 		return (NULL);
 	str = NULL;
@@ -64,7 +103,7 @@ char	*extract_str_line(char *tmp)
 	return (str);
 }
 
-char	*update_tmp_str(char *str)
+char	*my_update_tmp_str(char *str)
 {
 	int		index;
 	int		size;
@@ -73,7 +112,7 @@ char	*update_tmp_str(char *str)
 
 	if (NULL == str)
 		return (NULL);
-	index = count_next_line_size(str);
+	index = my_count_next_line_size(str);
 	size = ft_strlen(str) - index;
 	tmp_str = NULL;
 	tmp_str = (char *)malloc((size + 1) * sizeof(char));
@@ -90,8 +129,9 @@ char	*update_tmp_str(char *str)
 	free(str);
 	return (tmp_str);
 }
+#endif
 
-char	*get_next_line(int fd)
+char	*get_next(int fd)
 {
 	static char		*tmp_str = NULL;
 	char			*str_next_line;
@@ -104,8 +144,8 @@ char	*get_next_line(int fd)
 	str_next_line = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (NULL == str_next_line)
 		return (NULL);
-	tmp_str = insert_in_tmp_str(tmp_str, str_next_line, fd);
-	str_next_line = extract_str_line(tmp_str);
-	tmp_str = update_tmp_str(tmp_str);
+	tmp_str = my_insert_in_tmp_str(tmp_str, str_next_line, fd);
+	str_next_line = my_extract_str_line(tmp_str);
+	tmp_str = my_update_tmp_str(tmp_str);
 	return (str_next_line);
 }

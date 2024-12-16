@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 12:05:01 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:06:22 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_minishell
 	int		pipefd[2];
 }	t_minishell;
 
+char	*get_next(int fd);
 /* error */
 bool		has_open_quote(char *entry, bool found_peer, int i);
 
