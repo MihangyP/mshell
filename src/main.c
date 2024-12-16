@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 11:34:43 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/16 12:04:06 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,11 @@ void	free_minishell(t_minishell	*mshell)
 		unlink(".heredoc.tmp");
 }
 
-t_status	repl(t_minishell *mshell)
+t_status	repl(t_minishell *mshell, int fd)
 {
 	char	*entry;
 
+	load_history(fd);
 	while (true)
 	{
 		entry = readline("mshell> ");
@@ -61,6 +62,7 @@ t_status	repl(t_minishell *mshell)
 			printf("open quote\n");
 		else if (!is_empty(entry))
 		{
+			save_history(entry, fd);
 			add_history(entry);
 			if (!parse_entry(mshell, entry))
 				continue ;
@@ -111,12 +113,14 @@ void	init_minishell(t_minishell *mshell)
 int	main(int ac, char **av, char **env)
 {
 	t_minishell	mshell;
+	int			fd;
 
 	(void)ac;
 	(void)av;
 	init_minishell(&mshell);
+	fd = open_history_file();
 	listen_signals();
-	if (!init_env(&mshell, env) || !repl(&mshell))
+	if (!init_env(&mshell, env) || !repl(&mshell, fd))
 	{
 		free_minishell(&mshell);
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 11:01:13 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/16 12:05:01 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ extern pid_t	g_pid;
 typedef bool	t_status;
 # define SUCCESS true
 # define FAIL false
+# define HISTORY_FILE ".mshell_history"
 
 typedef struct s_quotes
 {
@@ -112,6 +113,9 @@ bool		is_quote(char c);
 void		free_and_exit(t_minishell *mshell, int exit_code);
 void		init_quotes(t_quotes *quotes);
 int		len_cmd(t_cmd *cmd);
+int open_history_file(void);
+void    save_history(char *entry, int old_fd);
+void    load_history(int old_fd);
 
 /* */
 bool		print_error(char *str);

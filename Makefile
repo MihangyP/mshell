@@ -6,14 +6,14 @@
 #    By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/07 12:06:42 by pmihangy          #+#    #+#              #
-#    Updated: 2024/12/09 16:23:38 by pmihangy         ###   ########.fr        #
+#    Updated: 2024/12/16 12:05:20 by irazafim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 ## GLOBAL VARIABLES
 NAME = minishell
 SRC = main.c 
-UTILS_FILES = error.c free.c lst.c signals.c utils.c utils2.c
+UTILS_FILES = error.c free.c lst.c signals.c utils.c utils2.c history.c
 PARSER_FILES = parser.c tokenizer.c tokenizer_utils.c parsing_tokens.c  \
 			   parsing_tokens_get_functions.c parsing_tokens_utils.c \
 			   expander.c expander_utils.c cmd.c
@@ -26,11 +26,11 @@ SRC_FILES += $(addprefix src/exec/, $(EXEC_FILES))
 SRC_FILES += $(addprefix src/builtins/, $(BUILTINS_FILES))
 HEADER_FILE = ./include/minishell.h
 CC = gcc -g
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra # -Werror
 RM = rm -rf
 INCLUDE = -I./include -I./libft
 LIBFT = ./libft
-LINKING = -L$(LIBFT) -lft -lreadline -lhistory
+LINKING = -L$(LIBFT) -lft -lreadline
 
 ## RULES
 all: $(NAME)
@@ -45,7 +45,7 @@ clean:
 
 fclean: clean
 	make -C $(LIBFT) fclean
-	$(RM) $(NAME)
+	$(RM) $(NAME) .mshell_history
 
 re: fclean all
 

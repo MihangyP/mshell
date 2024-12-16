@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:28:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:21:48 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/16 08:21:26 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
