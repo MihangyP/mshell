@@ -6,11 +6,24 @@
 /*   By: irazafim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:03:37 by irazafim          #+#    #+#             */
-/*   Updated: 2024/12/16 12:07:45 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/16 12:16:30 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+void free_arr(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		++i;
+	}
+    free(arr);
+}
 
 int open_history_file(void)
 {
@@ -63,5 +76,6 @@ void    load_history(int old_fd)
     i = -1;
     while (arr[++i])
 		add_history(arr[i]);
+	free_arr(arr);
 	close(fd);
 }
