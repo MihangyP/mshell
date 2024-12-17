@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 16:06:22 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 08:58:50 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int		len_cmd(t_cmd *cmd);
 int open_history_file(void);
 void    save_history(char *entry, int old_fd);
 void    load_history(int old_fd);
+char	*getpath(t_lst *env, char *name);
 
 /* */
 bool		print_error(char *str);

@@ -6,7 +6,7 @@
 #    By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/07 12:06:42 by pmihangy          #+#    #+#              #
-#    Updated: 2024/12/16 16:11:58 by pmihangy         ###   ########.fr        #
+#    Updated: 2024/12/17 07:33:24 by irazafim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,6 @@ fclean: clean
 re: fclean all
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.donto ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --suppressions=readline.donto ./$(NAME)
 
 .PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:32:33 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 14:12:56 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 09:14:03 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	cd_minishell(t_minishell *mshell, char **params)
 	if (arg_len == 1 || arg_len == 2)
 	{
 		if (arg_len == 1)
-			path = getenv("HOME");
+			path = getpath(mshell->env, "HOME=");
 		else
 			path = params[1];
 		if (!getcwd(oldpwd, PATH_MAX))

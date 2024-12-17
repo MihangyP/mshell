@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/16 14:41:51 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 08:50:10 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,14 @@ t_status	repl(t_minishell *mshell, int fd)
 	while (true)
 	{
 		entry = readline("mshell> ");
+		if (g_pid == -69)
+			mshell->exit_code = 130;
 		if (!entry)
 		{
 			printf("exit\n");
 			close(fd);
-			return (free_minishell(mshell), FAIL);
+			free_minishell(mshell);
+			return (1);
 		}
 		if (has_open_quote(entry, false, 0))
 			printf("open quote\n");
