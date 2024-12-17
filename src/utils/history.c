@@ -6,7 +6,7 @@
 /*   By: irazafim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:03:37 by irazafim          #+#    #+#             */
-/*   Updated: 2024/12/16 16:14:11 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 11:19:25 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void    save_history(char *entry, int fd)
 void    load_history(int fd)
 {
 	char	*s;
+
 	s = get_next(fd);
 	while (s)
 	{
@@ -43,4 +44,5 @@ void    load_history(int fd)
 		free(s);
 		s = get_next(fd);
 	}
+	free(s);
 }

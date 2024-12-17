@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:24:10 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:20:58 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 11:11:17 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,31 +42,6 @@ void	token_dup(char *entry, int len, char *tmp)
 	tmp[i] = 0;
 }
 
-#if 0
-void	token_dup(char *entry, int len, char *tmp)
-{
-	int		i;
-	int		j;
-	char	quote;
-
-	i = 0;
-	j = 0;
-	while (entry[i] && i < len)
-	{
-		if (entry[i] && !is_quote(entry[i]))
-			tmp[j++] = entry[i++];
-		if (entry[i] && is_quote(entry[i]))
-		{
-			quote = entry[i];
-			++i;
-			while (entry[i] && entry[i] != quote)
-				tmp[j++] = entry[i++];
-		}
-	}
-	tmp[j] = '\0';
-}
-#endif
-
 int	cmd_arg_len(char *entry, int *quotes)
 {
 	int i;
@@ -94,31 +69,6 @@ int	cmd_arg_len(char *entry, int *quotes)
 	return (i);
 
 }
-
-#if 0
-int	cmd_arg_len(char *entry, int *quotes)
-{
-	int		i;
-	char	quote;
-
-	i = 0;
-	while (entry[i] && !is_space(entry[i]) && !is_operator(entry[i]))
-	{
-		if (entry[i] && !is_quote(entry[i]))
-			++i;
-		if (is_quote(entry[i]))
-		{
-			(*quotes)++;
-			quote = entry[i++];
-			while (entry[i] && entry[i] != quote)
-				++i;
-			if (entry[i])
-				++i;
-		}
-	}
-	return (i);
-}
-#endif
 
 t_status	insert_cmd_arg(t_token **root, char **entry)
 {
