@@ -6,21 +6,38 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 12:55:59 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:47:45 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
+void	callback(int signum)
+{
+    (void)signum;
+    g_pid = -42;
+    rl_done = 1;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	printf("mshell");
+	rl_on_new_line();
+	rl_redisplay();
+}
+
 bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 {
 	char	*buf;
 
-	// TODO: Quitter si on fait ctrl-c
+	signal(SIGINT, callback);
 	while (true)
 	{
 		buf = NULL;
 		buf = readline("> ");
+		if (g_pid == -42)
+        {
+            g_pid = 0;
+            break;
+        }
 		if (!buf)
 		{
 			print_error("warning: here-document delimited by end-of-file ");
@@ -29,7 +46,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 			print_error("')\n");
 			break ;
 		}
-		if (!ft_strncmp(word, buf, INT_MAX))
+		if (!ft_strncmp(word, buf, INT_MAX) || g_pid == -42)
 			break ;
 		if (!expand_entry(mshell, &buf))
 			free_and_exit(mshell, 1);
@@ -83,14 +100,16 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 
 t_status	parsing(t_minishell *mshell, t_token *tmp)
 {
-	bool	infile = get_infile(mshell, tmp, mshell->cmd->prev);
+	bool	infile;
 
+	infile = get_infile(mshell, tmp, mshell->cmd->prev);
 	if (!infile && mshell->cmd->prev->in != -1)
 		return (FAIL);
 	if (mshell->cmd->prev->in == -1)
 	{
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->out = -1;
+		close(mshell->fd);
 		return (SUCCESS);
 	}
 	if (!get_outfile(tmp, mshell->cmd->prev, mshell) && mshell->cmd->prev->out \
@@ -102,6 +121,7 @@ t_status	parsing(t_minishell *mshell, t_token *tmp)
 			close(mshell->cmd->prev->in);
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->in = -1;
+		close(mshell->fd);
 		return (SUCCESS);
 	}
 	mshell->cmd->prev->cmd_param = get_param(mshell, tmp);
@@ -118,7 +138,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 		free_and_exit(mshell, 1);
 	if (!parsing(mshell, curr))
+	{
+		printf("Hello222\n");
 		return (FAIL);
+	}
 	curr = curr->next;
 	while (curr != mshell->token)
 	{
@@ -127,7 +150,10 @@ t_status	parsing_tokens(t_minishell *mshell)
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 				free_and_exit(mshell, 1);
 			if (!parsing(mshell, curr))
+			{
+				printf("Hello0000\n");
 				return (FAIL);
+			}
 		}
 		curr = curr->next;
 	}

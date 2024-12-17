@@ -6,7 +6,7 @@
 /*   By: irazafim <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 12:03:37 by irazafim          #+#    #+#             */
-/*   Updated: 2024/12/17 13:17:09 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:08:53 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,16 @@ int open_history_file(void)
     return (fd);
 }
 
-void    save_history(char *entry, int fd)
+void    save_history(char *entry, t_minishell *mshell)
 {
 	char    *to_append;
 
 	to_append = ft_strjoin(entry, "\n");
 	if (!to_append)
 		exit(1);
-    write(fd, to_append, ft_strlen(to_append));
+	if (mshell->fd < 0)
+		mshell->fd = open(HISTORY_FILE, O_RDWR | O_APPEND);
+    write(mshell->fd, to_append, ft_strlen(to_append));
 	free(to_append);
 }
 

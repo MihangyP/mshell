@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:34:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 10:41:49 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:48:56 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	absolute_path(char **path, char *cmd, t_minishell *mshell)
 		free_minishell(mshell);
 	if (access((*path), F_OK))
 	{
-		write(2, (*path), ft_strlen((*path)));
-		write(2, " : command not found\n", 21);
 		free(*path);
 		*path = NULL;
 	}
@@ -54,6 +52,13 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	}
 	if (!(*path))
 	{
+		if (ft_strchr(cmd, '/'))
+		{
+			mshell->exit_code = 126;
+			write(2, cmd, ft_strlen(cmd));
+			write(2, ": Not a directory\n", 19);
+			return (false);
+		}
 		mshell->exit_code = 127;
 		return (false);
 	}

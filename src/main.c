@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 13:17:23 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:16:25 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_status	repl(t_minishell *mshell)
 			printf("open quote\n");
 		else if (!is_empty(entry))
 		{
-			save_history(entry, mshell->fd);
+			save_history(entry, mshell);
 			add_history(entry);
 			if (!parse_entry(mshell, entry))
 			{
