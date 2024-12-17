@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:32:52 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:18:17 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 10:34:21 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void	exit_minishell(t_minishell *mshell, char **av)
 	int		exit_value;
 
 	if (!av[1])
+	{
+		close(mshell->fd);
 		free_and_exit(mshell, mshell->exit_code);
+	}
 	if (av[2])
 	{
 		print_error("exit: too many arguments\n");
@@ -59,7 +62,9 @@ void	exit_minishell(t_minishell *mshell, char **av)
 		print_error("exit: ");
 		print_error(av[1]);
 		print_error(": numeric argument required\n");
+		close(mshell->fd);
 		free_and_exit(mshell, 2);
 	}
+	close(mshell->fd);
 	free_and_exit(mshell, exit_value);
 }

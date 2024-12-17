@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 08:58:50 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/17 10:26:34 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_minishell
 	int		exit_code;
 	int		redirection_error;
 	int		pipefd[2];
+	int		fd;
 }	t_minishell;
 
 char	*get_next(int fd);

@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 08:50:10 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/17 10:36:28 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	free_minishell(t_minishell	*mshell)
 		unlink(".heredoc.tmp");
 }
 
-t_status	repl(t_minishell *mshell, int fd)
+t_status	repl(t_minishell *mshell)
 {
 	char	*entry;
 
-	load_history(fd);
+	load_history(mshell->fd);
 	while (true)
 	{
 		entry = readline("mshell> ");
@@ -58,7 +58,7 @@ t_status	repl(t_minishell *mshell, int fd)
 		if (!entry)
 		{
 			printf("exit\n");
-			close(fd);
+			close(mshell->fd);
 			free_minishell(mshell);
 			return (1);
 		}
@@ -66,17 +66,21 @@ t_status	repl(t_minishell *mshell, int fd)
 			printf("open quote\n");
 		else if (!is_empty(entry))
 		{
-			save_history(entry, fd);
+			save_history(entry, mshell->fd);
 			add_history(entry);
 			if (!parse_entry(mshell, entry))
+			{
+				close(mshell->fd);
 				continue ;
+			}
 			if (!exec_minishell(mshell))
-				return (FAIL);
+				return (close(mshell->fd), FAIL);
 		}
 		free_cmd(&mshell->cmd);
 		free_token(&mshell->token);
 		g_pid = 0;
 	}
+	close(mshell->fd);
 	return (SUCCESS);
 }
 
@@ -111,24 +115,25 @@ void	init_minishell(t_minishell *mshell)
 	mshell->redirection_error = 0;
 	mshell->pipefd[0] = -1;
 	mshell->pipefd[1] = -1;
+	mshell->fd = open_history_file();
 	g_pid = 0;
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_minishell	mshell;
-	int			fd;
 
 	(void)ac;
 	(void)av;
 	init_minishell(&mshell);
-	fd = open_history_file();
 	listen_signals();
-	if (!init_env(&mshell, env) || !repl(&mshell, fd))
+	if (!init_env(&mshell, env) || !repl(&mshell))
 	{
+		close(mshell.fd);
 		free_minishell(&mshell);
 		return (1);
 	}
+	close(mshell.fd);
 	free_minishell(&mshell);
 	return (0);
 }

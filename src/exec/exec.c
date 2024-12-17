@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:34:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:22:42 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 10:41:49 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	else
 		absolute_path(path, cmd, mshell);
 	if (!(*path) && mshell->exit_code == -1)
+	{
+		close(mshell->fd);
 		free_and_exit(mshell, mshell->exit_code);
+	}
 	if (!(*path))
 	{
 		mshell->exit_code = 127;

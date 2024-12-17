@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:36:37 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:23:05 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 09:49:41 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	wait_childrens(t_minishell *mshell)
 		{
 			if (WIFEXITED(wstatus))
 				mshell->exit_code = WEXITSTATUS(wstatus);
+			else if (WIFSIGNALED(wstatus))
+				mshell->exit_code = WTERMSIG(wstatus) + 128;
 		}
 		if (curr->out >= 0)
 			close(curr->out);
@@ -40,6 +42,8 @@ void	wait_childrens(t_minishell *mshell)
 	{
 		if (WIFEXITED(wstatus))
 			mshell->exit_code = WEXITSTATUS(wstatus);
+		else if (WIFSIGNALED(wstatus))
+			mshell->exit_code = WTERMSIG(wstatus) + 128;
 	}
 	if (curr->out >= 0)
 		close(curr->out);
