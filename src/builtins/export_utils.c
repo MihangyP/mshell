@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:18:35 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:38:48 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,15 @@ bool	exist_in_env(char *key, t_lst *env)
 	{
 		env_key = get_key(curr->text);
 		if (!ft_strncmp(env_key, key, INT_MAX))
-			return (true);
+			return (free(env_key), true);
+		free(env_key);
 		curr = curr->next;
 	}
 	env_key = get_key(curr->text);
 	if (!ft_strncmp(env_key, key, INT_MAX))
-		return (true);
+		return (free(env_key), true);
+	if (env_key)
+		free(env_key);
 	return (false);
 }
 
@@ -96,9 +99,11 @@ t_status	fill_env_text(char *s1, char *s2, t_lst *new_env)
 		return (FAIL);
 	new_env->text = ft_strdup(text);
 	if (!new_env->text)
-		return (FAIL);
+		return (free(text), FAIL);
 	new_env->next = malloc(sizeof(t_lst));
 	if (!new_env->next)
-		return (FAIL);
+		return (free(text), FAIL);
+	if (text)
+		free(text);
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 11:51:16 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:55:59 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 {
 	char	*buf;
 
+	// TODO: Quitter si on fait ctrl-c
 	while (true)
 	{
 		buf = NULL;

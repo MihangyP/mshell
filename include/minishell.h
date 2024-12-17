@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 10:26:34 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:16:42 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ extern pid_t	g_pid;
 typedef bool	t_status;
 # define SUCCESS true
 # define FAIL false
-# define HISTORY_FILE ".mshell_history"
+# define HISTORY_FILE "/home/pmihangy/Documents/cursus/.mshell_history"
 
 typedef struct s_quotes
 {

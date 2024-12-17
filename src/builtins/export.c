@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:03 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 10:16:17 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:30:48 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,18 @@ t_status	export(char *str, t_lst **env)
 	if (!exist_in_env(key, *env))
 	{
 		if (!lst_append(env, str))
-			return (FAIL);
+			return (free(key), FAIL);
 	}
 	else
 	{
 		if (ft_strchr(str, '='))
 		{
 			if (!update_env_export(str, env))
-				return (FAIL);
+				return (free(key), FAIL);
 		}
 	}
+	if (key)
+		free(key);
 	return (SUCCESS);
 }
 
