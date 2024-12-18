@@ -39,6 +39,20 @@ void	absolute_path(char **path, char *cmd, t_minishell *mshell)
 	}
 }
 
+int	count_slash(char *cmd)
+{
+	int	counter;
+
+	counter = 0;
+	while (*cmd)
+	{
+		if (*cmd == '/')
+			++counter;	
+		++cmd;
+	}
+	return (counter);
+}
+
 bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 {
 	if (!ft_strchr(cmd, '/'))
@@ -52,13 +66,18 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 	}
 	if (!(*path))
 	{
-		if (ft_strchr(cmd, '/'))
+		if (ft_strchr(cmd, '/') && count_slash(cmd) > 1)
 		{
 			mshell->exit_code = 126;
 			write(2, cmd, ft_strlen(cmd));
 			write(2, ": Not a directory\n", 19);
 			return (false);
 		}
+		else if (count_slash(cmd) == 1)
+		{
+			write(2, cmd, ft_strlen(cmd));
+			write(2, ": No such file or directory\n", 28);
+		}		
 		mshell->exit_code = 127;
 		return (false);
 	}
