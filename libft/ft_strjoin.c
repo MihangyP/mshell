@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 15:53:52 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/11 14:14:55 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:43:48 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ char	*ft_strjoin(char *s1, char const *s2)
 		j++;
 	}
 	str[i] = '\0';
-	// free(s1);
+	free(s1);
 	return (str);
 }

@@ -6,26 +6,11 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:34:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 09:39:47 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:40:01 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-bool	check_dir(char **path, char *cmd, t_minishell *mshell)
-{
-	struct stat	path_stat;
-
-	stat(*path, &path_stat);
-	if (!S_ISREG(path_stat.st_mode))
-	{
-		print_error(cmd);
-		print_error(" : Is a directory\n");
-		mshell->exit_code = 126;
-		return (false);
-	}
-	return (true);
-}
 
 void	absolute_path(char **path, char *cmd, t_minishell *mshell)
 {
@@ -39,18 +24,19 @@ void	absolute_path(char **path, char *cmd, t_minishell *mshell)
 	}
 }
 
-int	count_slash(char *cmd)
+bool	cmd_exit_next(char **path, t_minishell *mshell, char *cmd)
 {
-	int	counter;
-
-	counter = 0;
-	while (*cmd)
+	if (access((*path), X_OK))
 	{
-		if (*cmd == '/')
-			++counter;	
-		++cmd;
+		perror(*path);
+		free((*path));
+		(*path) = NULL;
+		mshell->exit_code = 126;
+		return (false);
 	}
-	return (counter);
+	if (!check_dir(path, cmd, mshell))
+		return (false);
+	return (true);
 }
 
 bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
@@ -74,21 +60,11 @@ bool	cmd_exist(char **path, t_minishell *mshell, char *cmd)
 		{
 			write(2, cmd, ft_strlen(cmd));
 			write(2, ": No such file or directory\n", 28);
-		}		
+		}
 		mshell->exit_code = 127;
 		return (false);
 	}
-	if (access((*path), X_OK))
-	{
-		perror(*path);
-		free((*path));
-		(*path) = NULL;
-		mshell->exit_code = 126;
-		return (false);
-	}
-	if (!check_dir(path, cmd, mshell))
-		return (false);
-	return (true);
+	return (cmd_exit_next(path, mshell, cmd));
 }
 
 t_status	exec_cmd(t_minishell *mshell, t_cmd *cmd)
@@ -119,7 +95,7 @@ t_status	exec_minishell(t_minishell *mshell)
 
 	curr = mshell->cmd;
 	if (curr && curr->next == curr && !curr->skip_cmd \
-		&& curr->cmd_param[0] && is_builtin(curr->cmd_param[0]))
+			&& curr->cmd_param[0] && is_builtin(curr->cmd_param[0]))
 		return (launch_builtin(mshell, curr));
 	if (mshell->cmd)
 	{
@@ -133,6 +109,6 @@ t_status	exec_minishell(t_minishell *mshell)
 			curr = curr->next;
 		}
 		wait_childrens(mshell);
-	}	
+	}
 	return (SUCCESS);
 }

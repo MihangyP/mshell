@@ -6,18 +6,16 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:24:10 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 11:11:17 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:12:58 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	token_dup(char *entry, int len, char *tmp)
+void	token_dup(char *entry, int len, char *tmp, int j)
 {
-	int j;
 	int	i;
 
-	j = 0;
 	i = 0;
 	while (entry[i + j] && i < len)
 	{
@@ -44,7 +42,7 @@ void	token_dup(char *entry, int len, char *tmp)
 
 int	cmd_arg_len(char *entry, int *quotes)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	*quotes = 0;
@@ -67,7 +65,6 @@ int	cmd_arg_len(char *entry, int *quotes)
 			++i;
 	}
 	return (i);
-
 }
 
 t_status	insert_cmd_arg(t_token **root, char **entry)
@@ -81,7 +78,7 @@ t_status	insert_cmd_arg(t_token **root, char **entry)
 	tmp = malloc((len - (2 * quotes) + 1) * sizeof(char));
 	if (!tmp)
 		return (FAIL);
-	token_dup(*entry, len - (2 * quotes), tmp);
+	token_dup(*entry, len - (2 * quotes), tmp, 0);
 	if (!add_token(root, tmp, 0))
 		return (free(tmp), FAIL);
 	if ((*root)->prev == (*root) || (*root)->prev->prev->id == PIPE)

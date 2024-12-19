@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:07:12 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 09:03:10 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:56:23 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,17 @@ char	*getpath(t_lst *env, char *name)
 	if (!ft_strncmp(name, curr->text, ft_strlen(name)))
 		return (curr->text + ft_strlen(name));
 	return (NULL);
+}
+
+t_status	my_write_history(t_minishell *mshell, char *entry)
+{
+	save_history(entry, mshell);
+	add_history(entry);
+	return (SUCCESS);
+}
+
+void	manage_sigint(t_minishell *mshell)
+{
+	if (g_pid == -69)
+		mshell->exit_code = 130;
 }

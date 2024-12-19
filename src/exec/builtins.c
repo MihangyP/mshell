@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:35:25 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 13:00:00 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:38:37 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,32 @@ bool	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (false);
-	if (!ft_strncmp("echo", cmd, INT_MAX) || !ft_strncmp("cd", cmd, INT_MAX) \
-	|| !ft_strncmp("pwd", cmd, INT_MAX) || !ft_strncmp("export", cmd, INT_MAX) \
-	|| !ft_strncmp("unset", cmd, INT_MAX) || !ft_strncmp("env", cmd, INT_MAX) \
-	|| !ft_strncmp("exit", cmd, INT_MAX))
+	if (!ft_strncmp("echo", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("cd", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("pwd", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("unset", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("export", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("env", cmd, INT_MAX))
+		return (true);
+	else if (!ft_strncmp("exit", cmd, INT_MAX))
 		return (true);
 	return (false);
+}
+
+void	manage_env(t_minishell *mshell, t_cmd *cmd)
+{
+	if (cmd->cmd_param[1])
+	{
+		write(2, "No such file or directory\n", 26);
+		mshell->exit_code = 127;
+	}
+	else
+		mshell->exit_code = env_minishell(mshell->env);
 }
 
 void	exec_builtin(int save_stdout, t_minishell *mshell, t_cmd *cmd)
@@ -37,15 +57,7 @@ void	exec_builtin(int save_stdout, t_minishell *mshell, t_cmd *cmd)
 	else if (!ft_strncmp("unset", cmd->cmd_param[0], INT_MAX))
 		mshell->exit_code = unset_minishell(cmd->cmd_param, &mshell->env);
 	else if (!ft_strncmp("env", cmd->cmd_param[0], INT_MAX))
-	{
-		if (cmd->cmd_param[1])
-		{
-			write(2, "No such file or directory\n", 26);
-			mshell->exit_code = 127;		
-		}
-		else
-			mshell->exit_code = env_minishell(mshell->env);
-	}
+		manage_env(mshell, cmd);
 	else if (!ft_strncmp("exit", cmd->cmd_param[0], INT_MAX))
 	{
 		if (cmd->out >= 0)

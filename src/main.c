@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 10:11:57 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:49:03 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,6 @@ void	free_minishell(t_minishell	*mshell)
 	rl_clear_history();
 	if (!access(".heredoc.tmp", F_OK))
 		unlink(".heredoc.tmp");
-}
-
-t_status	my_write_history(t_minishell *mshell, char *entry)
-{
-	save_history(entry, mshell);
-	add_history(entry);
-	return (SUCCESS);
-}
-
-void	manage_sigint(t_minishell *mshell)
-{
-	if (g_pid == -69)
-		mshell->exit_code = 130;
 }
 
 t_status	repl(t_minishell *mshell)

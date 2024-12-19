@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 09:50:23 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/13 09:29:48 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/19 13:57:46 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ t_status	chop_var(t_minishell *mshell, char **res, size_t *len, char **input)
 
 	var_len = 0;
 	ft_bzero(var_name, sizeof(var_name));
-	if (**input != '?' && !ft_isdigit(**input) && **input != '_' && !ft_isalpha(**input))
+	if (**input != '?' && !ft_isdigit(**input) && \
+		**input != '_' && !ft_isalpha(**input))
 	{
 		*res = str_append(*res, "$", len);
 		return (SUCCESS);

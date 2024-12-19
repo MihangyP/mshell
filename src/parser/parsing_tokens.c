@@ -6,23 +6,11 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 09:41:37 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:42:51 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-void	callback(int signum)
-{
-    (void)signum;
-    g_pid = -42;
-    rl_done = 1;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	printf("mshell");
-	rl_on_new_line();
-	rl_redisplay();
-}
 
 bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 {
@@ -34,18 +22,12 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 		buf = NULL;
 		buf = readline("> ");
 		if (g_pid == -42)
-        {
-            g_pid = 0;
-            break;
-        }
-		if (!buf)
 		{
-			print_error("warning: here-document delimited by end-of-file ");
-			print_error("(wanted '");
-			print_error(word);
-			print_error("')\n");
+			g_pid = 0;
 			break ;
 		}
+		if (!buf && read_in_stdin_error(word))
+			break ;
 		if (!ft_strncmp(word, buf, INT_MAX) || g_pid == -42)
 			break ;
 		if (!expand_entry(mshell, &buf))
@@ -54,9 +36,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 		write(fd, "\n", 1);
 		free(buf);
 	}
-	free(buf);
-	close(fd);
-	return (true);
+	return (free(buf), close(fd), true);
 }
 
 int	here_doc(t_minishell *mshell, char *word)
@@ -100,17 +80,14 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 
 t_status	parsing(t_minishell *mshell, t_token *tmp)
 {
-	bool	infile;
-
-	infile = get_infile(mshell, tmp, mshell->cmd->prev);
-	if (!infile && mshell->cmd->prev->in != -1)
+	if (!get_infile(mshell, tmp, mshell->cmd->prev) && \
+		mshell->cmd->prev->in != -1)
 		return (FAIL);
 	if (mshell->cmd->prev->in == -1)
 	{
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->out = -1;
-		close(mshell->fd);
-		return (SUCCESS);
+		return (close(mshell->fd), SUCCESS);
 	}
 	if (!get_outfile(tmp, mshell->cmd->prev, mshell) && mshell->cmd->prev->out \
 			!= -1)
@@ -121,8 +98,7 @@ t_status	parsing(t_minishell *mshell, t_token *tmp)
 			close(mshell->cmd->prev->in);
 		mshell->cmd->prev->skip_cmd = true;
 		mshell->cmd->prev->in = -1;
-		close(mshell->fd);
-		return (SUCCESS);
+		return (close(mshell->fd), SUCCESS);
 	}
 	mshell->cmd->prev->cmd_param = get_param(mshell, tmp);
 	if (!mshell->cmd->prev->cmd_param)
