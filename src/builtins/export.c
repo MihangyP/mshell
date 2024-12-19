@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:03 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 13:30:48 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 09:22:43 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,17 @@ bool	export_no_args(t_lst *env)
 
 t_status	update_env_export(char *str, t_lst **env)
 {
-	t_lst *new_env;
-	t_lst *tmp;
-	t_lst *curr;
+	t_lst	*new_env;
+	t_lst	*tmp;
+	t_lst	*curr;
 
 	new_env = malloc(sizeof(t_lst));
 	if (!new_env)
 		return (FAIL);
 	tmp = new_env;
 	curr = *env;
-	while (curr->next != *env) {
+	while (curr->next != *env)
+	{
 		if (!fill_env_text(curr->text, str, new_env))
 			return (free(new_env), FAIL);
 		new_env->next = malloc(sizeof(t_lst));
@@ -64,8 +65,7 @@ t_status	update_env_export(char *str, t_lst **env)
 		return (free(new_env), FAIL);
 	new_env->next = tmp;
 	tmp->prev = new_env;
-	*env = tmp;
-	return (SUCCESS);
+	return (*env = tmp, SUCCESS);
 }
 
 t_status	export(char *str, t_lst **env)

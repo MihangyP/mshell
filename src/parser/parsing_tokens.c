@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 15:47:45 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 09:41:37 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,10 +138,7 @@ t_status	parsing_tokens(t_minishell *mshell)
 	if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 		free_and_exit(mshell, 1);
 	if (!parsing(mshell, curr))
-	{
-		printf("Hello222\n");
 		return (FAIL);
-	}
 	curr = curr->next;
 	while (curr != mshell->token)
 	{
@@ -150,10 +147,7 @@ t_status	parsing_tokens(t_minishell *mshell)
 			if (!append_cmd(&mshell->cmd, -2, -2, NULL))
 				free_and_exit(mshell, 1);
 			if (!parsing(mshell, curr))
-			{
-				printf("Hello0000\n");
 				return (FAIL);
-			}
 		}
 		curr = curr->next;
 	}

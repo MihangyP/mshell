@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:36:09 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 14:47:09 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 09:36:59 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 		env = lst_to_arr(mshell->env);
 		if (!env)
 		{
-			close(mshell->fd);
 			free_and_exit(mshell, 1);
 		}
 		rl_clear_history();
@@ -56,7 +55,6 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 	}
 	if (path)
 		free(path);
-	close(mshell->fd);
 	free_and_exit(mshell, mshell->exit_code);
 }
 

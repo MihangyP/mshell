@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 14:09:19 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 09:20:48 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ typedef struct s_minishell
 	int		fd;
 }	t_minishell;
 
-char	*get_next(int fd);
+char		*get_next(int fd);
 /* error */
 bool		has_open_quote(char *entry, bool found_peer, int i);
 
@@ -114,11 +114,11 @@ void		sort_array(char **arr, int len);
 bool		is_quote(char c);
 void		free_and_exit(t_minishell *mshell, int exit_code);
 void		init_quotes(t_quotes *quotes);
-int		len_cmd(t_cmd *cmd);
-int open_history_file(void);
-void    save_history(char *entry, t_minishell *mshell);
-void    load_history(int old_fd);
-char	*getpath(t_lst *env, char *name);
+int			len_cmd(t_cmd *cmd);
+int			open_history_file(void);
+void		save_history(char *entry, t_minishell *mshell);
+void		load_history(int old_fd);
+char		*getpath(t_lst *env, char *name);
 
 /* */
 bool		print_error(char *str);
@@ -132,16 +132,16 @@ t_status	expand_entry(t_minishell *mshell, char **entry);
 char		*get_env_value(t_minishell *mshell, const char *key);
 char		*str_append(char *dest, const char *src, size_t *dest_len);
 t_status	get_var(t_minishell *mshell, char **result, \
-			char *var_name, size_t *result_len);
+		char *var_name, size_t *result_len);
 void		handle_quotes(bool *in_single_quote, bool *in_double_quote, \
-			char quote_type);
+		char quote_type);
 t_status	append_text(char **result, size_t *result_len, char *text);
 t_status	handle_env_var(t_minishell *mshell, char **result, \
-			size_t *result_len, char **input);
+		size_t *result_len, char **input);
 t_status	process_quotes(char **input, char **res, size_t *res_len, \
-			t_quotes *quotes);
+		t_quotes *quotes);
 t_status	process_input(t_minishell *mshell, char *input, char **result, \
-			size_t *result_len);
+		size_t *result_len);
 
 /* tokenizer */
 t_status	insert_operator(t_token **root, char **entry);

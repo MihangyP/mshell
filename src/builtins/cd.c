@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:32:33 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 09:14:03 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/19 10:02:48 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,13 @@ t_status	update_env(t_minishell *mshell, char *oldpwd, char *pwd)
 	return (SUCCESS);
 }
 
+void	print_cd_error(char *param)
+{
+	print_error(param);
+	print_error(": ");
+	print_error("too many arguments\n");
+}
+
 int	cd_minishell(t_minishell *mshell, char **params)
 {
 	int		res;
@@ -99,11 +106,5 @@ int	cd_minishell(t_minishell *mshell, char **params)
 			free_and_exit(mshell, 1);
 		return (res);
 	}
-	else
-	{
-		print_error(params[0]);
-		print_error(": ");
-		print_error("too many arguments\n");
-	}
-	return (1);
+	return (print_cd_error(params[0]), 1);
 }

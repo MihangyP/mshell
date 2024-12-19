@@ -6,27 +6,13 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 15:16:25 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 10:11:57 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
 pid_t	g_pid;
-
-int	len_cmd(t_cmd *cmd)
-{
-	t_cmd	*curr = cmd;
-	int	counter = 0;
-
-	while (curr->next != cmd)
-	{
-		++counter;
-		curr = curr->next;
-	}
-	++counter;
-	return (counter);
-}
 
 void	free_minishell(t_minishell	*mshell)
 {
@@ -40,35 +26,41 @@ void	free_minishell(t_minishell	*mshell)
 		close(mshell->pipefd[0]);
 	if (mshell->pipefd[1] > 0)
 		close(mshell->pipefd[1]);
+	if (mshell->fd >= 0)
+		close(mshell->fd);
 	rl_clear_history();
 	if (!access(".heredoc.tmp", F_OK))
 		unlink(".heredoc.tmp");
+}
+
+t_status	my_write_history(t_minishell *mshell, char *entry)
+{
+	save_history(entry, mshell);
+	add_history(entry);
+	return (SUCCESS);
+}
+
+void	manage_sigint(t_minishell *mshell)
+{
+	if (g_pid == -69)
+		mshell->exit_code = 130;
 }
 
 t_status	repl(t_minishell *mshell)
 {
 	char	*entry;
 
-	load_history(mshell->fd);
 	while (true)
 	{
 		entry = readline("mshell> ");
-		if (g_pid == -69)
-			mshell->exit_code = 130;
+		manage_sigint(mshell);
 		if (!entry)
-		{
-			printf("exit\n");
-			close(mshell->fd);
-			free_minishell(mshell);
-			return (1);
-		}
+			return (printf("exit\n"), free_minishell(mshell), 1);
 		if (has_open_quote(entry, false, 0))
 			printf("open quote\n");
 		else if (!is_empty(entry))
 		{
-			save_history(entry, mshell);
-			add_history(entry);
-			if (!parse_entry(mshell, entry))
+			if (my_write_history(mshell, entry) && !parse_entry(mshell, entry))
 			{
 				close(mshell->fd);
 				continue ;
@@ -80,8 +72,7 @@ t_status	repl(t_minishell *mshell)
 		free_token(&mshell->token);
 		g_pid = 0;
 	}
-	close(mshell->fd);
-	return (SUCCESS);
+	return (close(mshell->fd), SUCCESS);
 }
 
 t_status	init_env(t_minishell *mshell, char **env)
@@ -125,8 +116,10 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	mshell.fd = -1;
 	init_minishell(&mshell);
 	listen_signals();
+	load_history(mshell.fd);
 	if (!init_env(&mshell, env) || !repl(&mshell))
 	{
 		close(mshell.fd);
