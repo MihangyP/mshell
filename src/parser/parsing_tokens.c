@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 12:02:29 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 15:35:56 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 18:20:33 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,6 @@ int	open_file(t_minishell *mshell, char *filename, int id)
 		flag = O_CREAT | O_WRONLY | O_TRUNC;
 	else if (id == APPEND)
 		flag = O_CREAT | O_WRONLY | O_APPEND;
-	/*else if (id == HEREDOC)*/
-		/*return (here_doc(mshell, filename));*/
-	/*else*/
-		/*return (-2);*/
 	fd = open(filename, flag, 0644);
 	if (fd == -1)
 		perror(filename);

@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 16:30:38 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 18:19:33 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_status	check_token_error(t_minishell *mshell)
 	}
 	return (SUCCESS);
 }
-// heredocccccc
+
 bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 {
 	char	*buf;
@@ -103,12 +103,12 @@ int	wait_process(void)
 {
 	int	status;
 
-	signal(SIGINT, SIG_IGN);  // Ignorer SIGINT pendant l'attente
+	signal(SIGINT, SIG_IGN);
 	wait(&status);
-	signal(SIGINT, handle_sigint);  // Restaurer la gestion de SIGINT après l'attente
+	signal(SIGINT, handle_sigint);
 	if (WIFEXITED(status))
 	{
-		if (WEXITSTATUS(status) == 130)  // Si le processus a été interrompu par Ctrl-C
+		if (WEXITSTATUS(status) == 130)
 			return (130);
 		else
 			return (WEXITSTATUS(status));
