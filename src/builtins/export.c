@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:03 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 09:22:43 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:42:31 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ bool	export_no_args(t_lst *env)
 	arr = lst_to_arr(env);
 	if (!arr)
 		return (false);
-	sort_array(arr, len_list(env));
 	i = 0;
 	while (arr[i])
 	{
@@ -65,6 +64,7 @@ t_status	update_env_export(char *str, t_lst **env)
 		return (free(new_env), FAIL);
 	new_env->next = tmp;
 	tmp->prev = new_env;
+	free_env(env);
 	return (*env = tmp, SUCCESS);
 }
 

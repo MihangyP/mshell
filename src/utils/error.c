@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:29:27 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:21:24 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 09:41:26 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,19 @@ bool	has_open_quote(char *entry, bool found_peer, int i)
 	else
 		return (true);
 	return (has_open_quote(entry, found_peer, i + 1));
+}
+
+void	free_arr(char **arr)
+{
+	int	i;
+
+	if (arr == NULL)
+		return ;
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }

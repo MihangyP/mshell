@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:36:09 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 09:36:59 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:05:45 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	redirect_in_out(t_minishell *mshell, t_cmd *cmd, int *pip)
 void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 {
 	char	*path;
-	char	**env;
 
 	path = NULL;
 	if (cmd->skip_cmd)
@@ -43,15 +42,13 @@ void	child_process(t_minishell *mshell, t_cmd *cmd, int *pip)
 	else if (cmd_exist(&path, mshell, cmd->cmd_param[0]))
 	{
 		redirect_in_out(mshell, cmd, pip);
-		env = lst_to_arr(mshell->env);
-		if (!env)
-		{
+		mshell->tmp_env = lst_to_arr(mshell->env);
+		if (!mshell->tmp_env)
 			free_and_exit(mshell, 1);
-		}
 		rl_clear_history();
 		signals2();
-		execve(path, cmd->cmd_param, env);
-		free(env);
+		execve(path, cmd->cmd_param, mshell->tmp_env);
+		free(mshell->env);
 	}
 	if (path)
 		free(path);

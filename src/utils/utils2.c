@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:07:12 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 13:56:23 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:26:55 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,5 @@ void	manage_sigint(t_minishell *mshell)
 {
 	if (g_pid == -69)
 		mshell->exit_code = 130;
+	g_pid = 0;
 }

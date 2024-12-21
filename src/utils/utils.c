@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:28:43 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/09 16:22:06 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 10:44:37 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,37 +29,4 @@ bool	is_empty(const char *str)
 bool	is_operator(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
-}
-
-static void	ft_swap_str_tab(int i, int j, char **tab)
-{
-	char	*temp;
-
-	temp = tab[i];
-	tab[i] = tab[j];
-	tab[j] = temp;
-}
-
-void	sort_array(char **arr, int len)
-{
-	int	i;
-	int	j;
-	int	diff;
-
-	i = 0;
-	while (i < len)
-	{
-		j = i + 1;
-		while (j < len)
-		{
-			diff = ft_strncmp(arr[i], arr[j], __INT_MAX__);
-			if (diff > 0)
-			{
-				ft_swap_str_tab(i, j, arr);
-				continue ;
-			}
-			j++;
-		}
-		i++;
-	}
 }

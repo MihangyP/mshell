@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 15:59:02 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 14:52:06 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:58:53 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*ft_free(char *buffer, char *buf)
 	char	*temp;
 
 	temp = ft_strjoin(buffer, buf);
+	free(buffer);
 	return (temp);
 }
 

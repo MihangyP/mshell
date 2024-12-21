@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 14:34:58 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 13:45:36 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_minishell
 	int		redirection_error;
 	int		pipefd[2];
 	int		fd;
+	char	**tmp_env;
 }	t_minishell;
 
 char		*get_next(int fd);
@@ -105,6 +106,7 @@ char		**lst_to_arr(t_lst *env);
 /* signals */
 void		listen_signals(void);
 void		signals2(void);
+void		handle_sigint(int signum);
 
 /* utils */
 bool		is_empty(const char *str);
@@ -121,9 +123,10 @@ void		load_history(int old_fd);
 char		*getpath(t_lst *env, char *name);
 t_status	my_write_history(t_minishell *mshell, char *entry);
 void		manage_sigint(t_minishell *mshell);
+void		free_arr(char **arr);
 
 /* */
-bool		print_error(char *str);
+int			print_error(char *str);
 bool		print_error_token(t_token *token, t_minishell *mshell);
 
 /* parser */

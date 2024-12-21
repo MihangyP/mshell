@@ -6,17 +6,17 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 13:35:01 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/12 11:02:17 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:56:42 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-bool	print_error(char *str)
+int	print_error(char *str)
 {
 	if (str)
 		write(2, str, ft_strlen(str));
-	return (true);
+	return (1);
 }
 
 bool	print_error_token(t_token *token, t_minishell *mshell)

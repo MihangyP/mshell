@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 14:54:02 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:30:38 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,125 @@ t_status	check_token_error(t_minishell *mshell)
 	}
 	return (SUCCESS);
 }
+// heredocccccc
+bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
+{
+	char	*buf;
+
+	while (true)
+	{
+		buf = NULL;
+		buf = readline("> ");
+		if (!buf && read_in_stdin_error(word))
+			break ;
+		if (!ft_strncmp(word, buf, INT_MAX) || g_pid == -42)
+			break ;
+		if (!expand_entry(mshell, &buf))
+			free_and_exit(mshell, 1);
+		write(fd, buf, ft_strlen(buf));
+		write(fd, "\n", 1);
+		free(buf);
+	}
+	return (free(buf), close(fd), true);
+}
+
+int	wait_process(void)
+{
+	int	status;
+
+	signal(SIGINT, SIG_IGN);  // Ignorer SIGINT pendant l'attente
+	wait(&status);
+	signal(SIGINT, handle_sigint);  // Restaurer la gestion de SIGINT après l'attente
+	if (WIFEXITED(status))
+	{
+		if (WEXITSTATUS(status) == 130)  // Si le processus a été interrompu par Ctrl-C
+			return (130);
+		else
+			return (WEXITSTATUS(status));
+	}
+	return (0);
+}
+
+void	handler_sigint_heredoc(int signum)
+{
+	(void)signum;
+	g_pid = 130;
+	printf("%d\n", g_pid);
+	exit(130);
+}
+
+void	setup_signals_heredoc(void)
+{
+	signal(SIGINT, handler_sigint_heredoc);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	handle_child_process(t_minishell *mshell)
+{
+	int		status;
+	int		fd;
+	t_token	*curr;			
+
+	setup_signals_heredoc();
+	status = 1;
+	curr = mshell->token;
+	while (curr->next != mshell->token)
+	{
+		if (curr->id == HEREDOC)
+		{
+			fd = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			if (fd < 0)
+				return ;
+			if (!read_in_stdin(mshell, fd, curr->next->text))
+			{
+				unlink(".heredoc.tmp");
+				return ;
+			}
+			fd = open(".heredoc.tmp", O_RDONLY);
+			if (fd > 0)
+				unlink(".heredoc.tmp");
+		}
+		curr = curr->next;
+	}
+	exit(status);
+}
+
+int	heredoc(t_minishell *mshell)
+{
+	pid_t	pid_child;
+
+	pid_child = fork();
+	if (pid_child == -1)
+	{
+		perror("fork");
+		free_and_exit(mshell, 2);
+	}
+	else if (pid_child == 0)
+		handle_child_process(mshell);
+	else
+		return (wait_process());
+	return (0);
+}
+
+#if 0
+int	here_doc(t_minishell *mshell, char *word)
+{
+	int	fd;
+
+	fd = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+		return (-1);
+	if (!read_in_stdin(mshell, fd, word))
+	{
+		unlink(".heredoc.tmp");
+		return (-1);
+	}
+	fd = open(".heredoc.tmp", O_RDONLY);
+	if (fd > 0)
+		unlink(".heredoc.tmp");
+	return (fd);
+}
+#endif
 
 t_status	parse_entry(t_minishell *mshell, char *entry)
 {
@@ -89,6 +208,8 @@ t_status	parse_entry(t_minishell *mshell, char *entry)
 		return (FAIL);
 	if (mshell->token)
 	{
+		heredoc(mshell);
+		printf("g_pid: %d\n", g_pid);
 		if (!parsing_tokens(mshell))
 		{
 			free_token(&mshell->token);

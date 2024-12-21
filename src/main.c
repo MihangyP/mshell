@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/19 14:53:22 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:25:44 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_status	repl(t_minishell *mshell)
 	while (true)
 	{
 		entry = readline("mshell> ");
-		manage_sigint(mshell);
+		/*manage_sigint(mshell);*/
 		if (!entry)
 			return (printf("exit\n"), free_minishell(mshell), 1);
 		if (has_open_quote(entry, false, 0))
@@ -52,11 +52,16 @@ t_status	repl(t_minishell *mshell)
 				close(mshell->fd);
 				continue ;
 			}
+			printf("%d\n", g_pid);
 			if (!exec_minishell(mshell))
 				return (close(mshell->fd), FAIL);
 		}
 		free_cmd(&mshell->cmd);
 		free_token(&mshell->token);
+		if (mshell->tmp_env)
+			free_arr(mshell->tmp_env);
+		if (g_pid == -42)
+			mshell->exit_code = 130;
 		g_pid = 0;
 	}
 	return (close(mshell->fd), SUCCESS);
@@ -94,6 +99,7 @@ void	init_minishell(t_minishell *mshell)
 	mshell->pipefd[0] = -1;
 	mshell->pipefd[1] = -1;
 	mshell->fd = open_history_file();
+	mshell->tmp_env = NULL;
 	g_pid = 0;
 }
 

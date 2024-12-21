@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:27:52 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/13 10:11:42 by irazafim         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:27:09 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,25 @@ t_status	get_outfile(t_token *token, t_cmd *cmd, t_minishell *mshell)
 
 t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 {
+	if (tmp->id == INPUT)
+	{
+		if (cmd->in >= 0)
+			close(cmd->in);
+		if (tmp == tmp->next || tmp->next->id <= 5)
+			return (print_error_token(tmp, mshell));
+		cmd->in = open_file(mshell, tmp->next->text, INPUT);
+		if (cmd->in == -1)
+		{
+			mshell->exit_code = 1;
+			mshell->redirection_error = 1;
+			return (FAIL);
+		}
+	}
+	return (SUCCESS);
+}
+#if 0
+t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
+{
 	if (tmp->id == INPUT || tmp->id == HEREDOC)
 	{
 		if (cmd->in >= 0)
@@ -100,6 +119,7 @@ t_status	get_in(t_minishell *mshell, t_token *tmp, t_cmd *cmd)
 	}
 	return (SUCCESS);
 }
+#endif
 
 t_status	get_infile(t_minishell *mshell, t_token *token, t_cmd *cmd)
 {
