@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 13:45:36 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/22 12:54:15 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,13 @@ typedef struct s_quotes
 	bool	in_single_quote;
 	bool	in_double_quote;
 }	t_quotes;
+
+typedef struct s_heredoc
+{
+	char	*tmp_value;
+	int		is_expand;
+	int		fd;
+}	t_heredoc;
 
 enum	e_id
 {

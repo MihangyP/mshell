@@ -66,7 +66,7 @@ char	*special_expand_char(char *str, char **env, int exit_status)
 		{
 			tmp = expand_special_char(str, env, &i, exit_status);
 			result = str_append(result, tmp);
-			free(tmp);
+		free(tmp);
 		}
 		else
 			result = char_append(result, str[i]);

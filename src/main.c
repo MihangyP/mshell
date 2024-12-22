@@ -6,7 +6,7 @@
 /*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 16:25:44 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/22 14:13:40 by pmihangy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,10 @@ t_status	repl(t_minishell *mshell)
 			if (my_write_history(mshell, entry) && !parse_entry(mshell, entry))
 			{
 				close(mshell->fd);
+				if (g_pid == 130)
+					mshell->exit_code = 130;
 				continue ;
 			}
-			printf("%d\n", g_pid);
 			if (!exec_minishell(mshell))
 				return (close(mshell->fd), FAIL);
 		}

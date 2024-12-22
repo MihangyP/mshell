@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: trarijam <trarijam@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 11:45:51 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 10:55:51 by pmihangy         ###   ########.fr       */
+/*   Created: 2024/02/20 12:21:37 by trarijam          #+#    #+#             */
+/*   Updated: 2024/08/22 15:27:59 by trarijam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *s, int fd)
+char	*ft_strrchr(const char *s, int c)
 {
-	int	i;
+	char	*last_occurence;
 
-	i = 0;
-	while (s[i])
+	last_occurence = (void *)0;
+	while (*s)
 	{
-		write(fd, &s[i], 1);
-		i++;
+		if (*s == (char)c)
+			last_occurence = (char *)s;
+		s++;
 	}
+	if (c == '\0')
+	{
+		if (*s == '\0')
+			last_occurence = (char *)s;
+	}
+	return (last_occurence);
 }

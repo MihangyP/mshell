@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: trarijam <trarijam@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/21 11:45:51 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 10:55:51 by pmihangy         ###   ########.fr       */
+/*   Created: 2024/08/28 08:11:34 by traveloa          #+#    #+#             */
+/*   Updated: 2024/10/21 07:30:45 by traveloa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minishell.h"
+#include <unistd.h>
 
-void	ft_putstr_fd(char *s, int fd)
+int	ft_pwd(char **args, char **env)
 {
-	int	i;
+	char	*pwd;
 
-	i = 0;
-	while (s[i])
-	{
-		write(fd, &s[i], 1);
-		i++;
-	}
+	(void)args;
+	(void)env;
+	pwd = NULL;
+	pwd = getcwd(NULL, 0);
+	ft_putendl_fd(pwd, 1);
+	if (pwd)
+		free(pwd);
+	return (EXIT_SUCCESS);
 }
