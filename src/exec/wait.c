@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:36:37 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 10:25:02 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:08:21 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	wait_childrens_next(t_minishell *mshell, t_cmd *curr, int executed_cmd)
 	int		wstatus;
 
 	pid = waitpid(-1, &wstatus, 0);
-	if (pid == g_pid)
+	if (pid == g_signal)
 	{
 		if (WIFEXITED(wstatus))
 			mshell->exit_code = WEXITSTATUS(wstatus);
@@ -47,7 +47,7 @@ void	wait_childrens(t_minishell *mshell)
 	{
 		pid = waitpid(-1, &wstatus, 0);
 		executed_command = 1;
-		if (pid == g_pid)
+		if (pid == g_signal)
 		{
 			if (WIFEXITED(wstatus))
 				mshell->exit_code = WEXITSTATUS(wstatus);

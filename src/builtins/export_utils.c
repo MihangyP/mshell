@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:33:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/17 13:38:48 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 11:12:37 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ bool	exist_in_env(char *key, t_lst *env)
 	while (curr->next != env)
 	{
 		env_key = get_key(curr->text);
-		if (!ft_strncmp(env_key, key, INT_MAX))
+		if (!ft_strncmp(env_key, key, ft_strlen(key)))
 			return (free(env_key), true);
 		free(env_key);
 		curr = curr->next;
 	}
 	env_key = get_key(curr->text);
-	if (!ft_strncmp(env_key, key, INT_MAX))
+	if (!ft_strncmp(env_key, key, ft_strlen(key)))
 		return (free(env_key), true);
 	if (env_key)
 		free(env_key);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 10:07:12 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 10:26:55 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:07:18 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_status	my_write_history(t_minishell *mshell, char *entry)
 
 void	manage_sigint(t_minishell *mshell)
 {
-	if (g_pid == -69)
+	if (g_signal == -69)
 		mshell->exit_code = 130;
-	g_pid = 0;
+	g_signal = 0;
 }

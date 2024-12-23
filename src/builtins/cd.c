@@ -3,78 +3,147 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:32:33 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 15:34:17 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 14:47:19 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-char	*get_path(char **env, char *path_name)
+t_lst *my_lstnew(char *content)
 {
-	int		i;
-	char	*path;
-	char	**tmp;
+    t_lst *new_node;
 
-	i = 0;
-	path = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(path_name, env[i], ft_strlen(path_name)) == 0)
-			break ;
-		i++;
-	}
-	tmp = ft_split(env[i], '=');
-	if (tmp)
-	{
-		path = ft_strdup(tmp[1]);
-		free_split(tmp);
-	}
-	return (path);
+    new_node = malloc(sizeof(t_lst));
+    if (!new_node)
+        return (NULL);
+    new_node->text = content;
+    new_node->next = new_node;
+    new_node->prev = new_node;
+    return (new_node);
 }
 
-void	update(t_list *env_lst, char *path, char *name)
+void my_lstadd_back(t_lst **lst, t_lst *new_node)
 {
-	t_list	*head;
-	char	*tmp;
+    t_lst *tail;
 
-	tmp = ft_strjoin(name, "=");
-	head = env_lst;
-	if (path)
-	{
-		while (env_lst)
-		{
-			if (ft_strncmp(tmp, (char *)env_lst->content, ft_strlen(tmp)) == 0)
-			{
-				free(env_lst->content);
-				env_lst->content = ft_strjoin(tmp, path);
-				break ;
-			}
-			env_lst = env_lst->next;
-		}
-		if (env_lst == NULL)
-			ft_lstadd_back(&head, ft_lstnew(ft_strjoin(tmp, path)));
-	}
-	free(tmp);
+    if (!lst || !new_node)
+        return;
+
+    if (!*lst)
+    {
+        *lst = new_node;
+        return;
+    }
+    tail = (*lst)->prev;
+    tail->next = new_node;
+    new_node->prev = tail;
+    new_node->next = *lst;
+    (*lst)->prev = new_node;
 }
 
-void	update_pwd(char ***env, char *old_pwd)
-{
-	t_list	*env_lst;
-	t_list	*head;
-	char	*pwd;
 
-	env_lst = get_env_lst(*env);
-	pwd = getcwd(NULL, 0);
-	head = env_lst;
-	update(env_lst, old_pwd, "OLDPWD");
-	update(env_lst, pwd, "PWD");
-	free(pwd);
-	free_split(*env);
-	*env = list_to_tab(head);
-	free_env_lst(head);
+char *get_path(t_lst *env, char *path_name)
+{
+    t_lst *current;
+    size_t path_name_len;
+
+    if (!env || !path_name)
+        return (NULL);
+
+    current = env;
+    path_name_len = ft_strlen(path_name);
+
+    while (1)
+    {
+        if (ft_strncmp(path_name, current->text, path_name_len) == 0 && current->text[path_name_len] == '=')
+            return (ft_strdup(&current->text[path_name_len + 1]));
+        current = current->next;
+        if (current == env)
+            break;
+    }
+    return (NULL);
+}
+
+void update(t_lst **env_lst, char *path, char *name)
+{
+    t_lst *current;
+    char *tmp;
+
+    if (!env_lst || !*env_lst || !name)
+        return;
+
+    tmp = ft_strjoin(name, "=");
+    current = *env_lst;
+
+    if (path)
+    {
+        while (1)
+        {
+            if (ft_strncmp(tmp, (char *)current->text, ft_strlen(tmp)) == 0)
+            {
+                free(current->text);
+                current->text = ft_strjoin(tmp, path);
+                free(tmp);
+                return;
+            }
+            current = current->next;
+            if (current == *env_lst)
+                break;
+        }
+        my_lstadd_back(env_lst, my_lstnew(ft_strjoin(tmp, path)));
+    }
+    free(tmp);
+}
+
+void update_pwd(t_lst **env, char *oldpwd)
+{
+    t_lst *new_env;
+    t_lst *current;
+    t_lst *new_node;
+    char *pwd;
+
+    if (!env || !*env)
+        return;
+    pwd = getcwd(NULL, 0);
+    new_env = NULL;
+    current = *env;
+    while (1)
+    {
+        new_node = malloc(sizeof(t_lst));
+        if (!new_node)
+        {
+            free_env(&new_env);
+            free(pwd);
+            return;
+        }
+        new_node->text = ft_strdup(current->text);
+        new_node->next = NULL;
+        new_node->prev = NULL;
+        if (!new_env)
+        {
+            new_env = new_node;
+            new_env->next = new_env;
+            new_env->prev = new_env;
+        }
+        else
+        {
+            new_node->next = new_env;
+            new_node->prev = new_env->prev;
+            new_env->prev->next = new_node;
+            new_env->prev = new_node;
+        }
+        current = current->next;
+        if (current == *env)
+            break;
+    }
+    update(&new_env, oldpwd, "OLDPWD");
+    update(&new_env, pwd, "PWD");
+    free_env(env);
+    *env = new_env;
+    free(pwd);
 }
 
 int	change_dir(char *path, t_minishell *mshell)
@@ -100,17 +169,15 @@ int	change_dir(char *path, t_minishell *mshell)
 		return (1);
 	}
 	free(path_name);
-	update_pwd(mshell, cwd);
+	update_pwd(&mshell->env, cwd);
 	free(cwd);
 	return (0);
 }
 
-int	cd_minishell(t_minishell *mshell, char **params)
+int cd_minishell(t_minishell *mshell, char **params)
 {
-	int		arg_len;
 	char	*cwd;
 
-	arg_len = count_arg(params);
 	if (params[1] && params[2])
 	{
 		ft_putendl_fd("cd: too many arguments", 2);
@@ -118,7 +185,7 @@ int	cd_minishell(t_minishell *mshell, char **params)
 	}
 	if (!params[1] || ft_strncmp(params[1], "~", 2) == 0)
 		return (change_dir("HOME", mshell));
-	else if (ft_strncmp(cmd[1], "-", 2) == 0)
+	else if (ft_strncmp(params[1], "-", 2) == 0)
 		return (change_dir("OLDPWD", mshell));
 	else
 	{
@@ -129,270 +196,8 @@ int	cd_minishell(t_minishell *mshell, char **params)
 			free(cwd);
 			return (1);
 		}
-		update_pwd(mshell, cwd);
-		free(cwd);
-		return (0);
-	}
-	/*int		res;*/
-	/*int		arg_len;*/
-	/*char	oldpwd[PATH_MAX];*/
-	/*char	pwd[PATH_MAX];*/
-	/*char	*path;*/
-
-	/*arg_len = count_arg(params);*/
-	/*if (arg_len == 1 || arg_len == 2)*/
-	/*{*/
-		/*if (arg_len == 1)*/
-			/*path = getpath(mshell->env, "HOME=");*/
-		/*else*/
-			/*path = params[1];*/
-		/*if (!getcwd(oldpwd, PATH_MAX))*/
-			/*free_and_exit(mshell, 1);*/
-		/*res = chdir(path);*/
-		/*if (res == -1)*/
-			/*return (perror(path), 1);*/
-		/*if (!getcwd(pwd, PATH_MAX))*/
-			/*free_and_exit(mshell, 1);*/
-		/*if (!update_env(mshell, oldpwd, pwd))*/
-			/*free_and_exit(mshell, 1);*/
-		/*return (res);*/
-	/*}*/
-	/*return (print_cd_error(params[0]), 1);*/
-}
-
-int	mns_cd(char **cmd, char ***env)
-{
-	char	*cwd;
-
-	if (cmd[1] && cmd[2])
-	{
-		ft_putendl_fd("cd: too many arguments", 2);
-		return (1);
-	}
-	if (!cmd[1] || ft_strncmp(cmd[1], "~", 2) == 0)
-		return (change_dir("HOME", env));
-	else if (ft_strncmp(cmd[1], "-", 2) == 0)
-		return (change_dir("OLDPWD", env));
-	else
-	{
-		cwd = getcwd(NULL, 0);
-		if (chdir(cmd[1]) == -1)
-		{
-			perror("cd");
-			free(cwd);
-			return (1);
-		}
-		update_pwd(env, cwd);
+		update_pwd(&mshell->env, cwd);
 		free(cwd);
 		return (0);
 	}
 }
-
-#if 0
-
-static int	count_arg(char **params)
-{
-	int	count;
-
-	count = 0;
-	while (params[count])
-		count++;
-	return (count);
-}
-
-static void	error_malloc(void)
-{
-	print_error(ERR_MALLOC);
-	return ;
-}
-
-static void	update_oldpwd(t_data *data)
-{
-	t_list	*tmp;
-	char	*test;
-	int		len;
-
-	tmp = data->env;
-	test = NULL;
-	len = len_list(tmp);
-	while (len--)
-	{
-		if (ft_strncmp(tmp->str, "PWD=", 3) == 0)
-			test = tmp->str;
-		tmp = tmp->next;
-	}
-	if (!test)
-		export("OLDPWD", &data->env);
-	if (test)
-	{
-		test = ft_strjoin("OLD", test);
-		if (!test)
-			return (error_malloc());
-		export(test, &data->env);
-	}
-	free(test);
-}
-
-static void	update_pwd(t_data *data, char *param)
-{
-	char	cwd[PATH_MAX];
-	char	*pwd;
-
-	update_oldpwd(data);
-	if (getcwd(cwd, PATH_MAX) == NULL)
-	{
-		perror(param);
-		return ;
-	}
-	pwd = ft_strjoin("PWD=", cwd);
-	if (!pwd)
-		return (error_malloc());
-	export(pwd, &data->env);
-	free(pwd);
-}
-
-int	ft_cd(t_data *data, char **params)
-{
-	int	res;
-
-	if (count_arg(params) == 2)
-	{
-		res = chdir(params[1]);
-		if (res == 0)
-			update_pwd(data, params[1]);
-		if (res == -1)
-			res *= -1;
-		if (res == 1)
-			perror(params[1]);
-		return (res);
-	}
-	return (1);
-}
-
-#if 0
-
-static int	count_arg(char **params)
-{
-	int	count;
-
-	count = 0;
-	while (params[count])
-		count++;
-	return (count);
-}
-
-bool	pwd_exist(char *str, t_lst *env)
-{
-	t_lst	*curr;
-
-	curr = env;
-	if (!ft_strncmp(curr->text, str, ft_strlen(str)))
-		return (true);
-	curr = curr->next;
-	while (curr)
-	{
-		if (!ft_strncmp(curr->text, str, ft_strlen(str)))
-			return (true);
-		curr = curr->next;
-	}
-	return (false);
-}
-
-static char	*get_text(t_minishell *mshell, char *text, char *opwd, char *pwd)
-{
-	char	*str;
-
-	if (!ft_strncmp(text, "OLDPWD=", 7))
-	{
-		str = ft_strjoin("OLDPWD=", opwd);
-		if (!str)
-			free_and_exit(mshell, 1);
-	}
-	else if (!ft_strncmp(text, "PWD=", 4))
-	{
-		str = ft_strjoin("PWD=", pwd);
-		if (!str)
-			free_and_exit(mshell, 1);
-	}
-	else
-	{
-		str = ft_strdup(text);
-		if (!str)
-			free_and_exit(mshell, 1);
-	}
-	return (str);
-}
-
-t_status	update_env(t_minishell *mshell, char *oldpwd, char *pwd)
-{
-	t_lst	*curr;
-	t_lst	*new_env;
-	t_lst	*tmp;
-
-	new_env = malloc(sizeof(t_lst));
-	tmp = new_env;
-	if (!new_env)
-		return (FAIL);
-	curr = mshell->env;
-	while (curr->next != mshell->env)
-	{
-		new_env->text = get_text(mshell, curr->text, oldpwd, pwd);
-		new_env->next = malloc(sizeof(t_lst));
-		if (!new_env->next)
-			return (FAIL);
-		curr = curr->next;
-		new_env = new_env->next;
-	}
-	new_env->text = get_text(mshell, curr->text, oldpwd, pwd);
-	if (!pwd_exist("OLDPWD=", mshell->env))
-	{
-		new_env->next = malloc(sizeof(t_lst));
-		new_env->text = ft_strjoin("OLDPWD=", oldpwd);
-	}
-	if (!pwd_exist("PWD=", mshell->env))
-	{
-		new_env->next = malloc(sizeof(t_lst));
-		new_env->text = ft_strjoin("PWD=", pwd);
-	}
-	new_env->next = tmp;
-	mshell->env = new_env;
-	return (SUCCESS);
-}
-
-void	print_cd_error(char *param)
-{
-	print_error(param);
-	print_error(": ");
-	print_error("too many arguments\n");
-}
-
-int	cd_minishell(t_minishell *mshell, char **params)
-{
-	int		res;
-	int		arg_len;
-	char	oldpwd[PATH_MAX];
-	char	pwd[PATH_MAX];
-	char	*path;
-
-	arg_len = count_arg(params);
-	if (arg_len == 1 || arg_len == 2)
-	{
-		if (arg_len == 1)
-			path = getpath(mshell->env, "HOME=");
-		else
-			path = params[1];
-		if (!getcwd(oldpwd, PATH_MAX))
-			free_and_exit(mshell, 1);
-		res = chdir(path);
-		if (res == -1)
-			return (perror(path), 1);
-		if (!getcwd(pwd, PATH_MAX))
-			free_and_exit(mshell, 1);
-		if (!update_env(mshell, oldpwd, pwd))
-			free_and_exit(mshell, 1);
-		return (res);
-	}
-	return (print_cd_error(params[0]), 1);
-}
-
-#endif

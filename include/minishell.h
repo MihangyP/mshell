@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:57 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 12:54:15 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:07:58 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <errno.h>
 # include <libft.h>
 
-extern pid_t	g_pid;
+extern int	g_signal;
 
 typedef bool	t_status;
 # define SUCCESS true

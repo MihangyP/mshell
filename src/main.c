@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 12:13:11 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 14:13:40 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:02:47 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-pid_t	g_pid;
+int	g_signal;
 
 void	free_minishell(t_minishell	*mshell)
 {
@@ -50,7 +50,7 @@ t_status	repl(t_minishell *mshell)
 			if (my_write_history(mshell, entry) && !parse_entry(mshell, entry))
 			{
 				close(mshell->fd);
-				if (g_pid == 130)
+				if (g_signal == 130)
 					mshell->exit_code = 130;
 				continue ;
 			}
@@ -61,9 +61,9 @@ t_status	repl(t_minishell *mshell)
 		free_token(&mshell->token);
 		if (mshell->tmp_env)
 			free_arr(mshell->tmp_env);
-		if (g_pid == -42)
+		if (g_signal == -42)
 			mshell->exit_code = 130;
-		g_pid = 0;
+		g_signal = 0;
 	}
 	return (close(mshell->fd), SUCCESS);
 }
@@ -101,7 +101,7 @@ void	init_minishell(t_minishell *mshell)
 	mshell->pipefd[1] = -1;
 	mshell->fd = open_history_file();
 	mshell->tmp_env = NULL;
-	g_pid = 0;
+	g_signal = 0;
 }
 
 int	main(int ac, char **av, char **env)

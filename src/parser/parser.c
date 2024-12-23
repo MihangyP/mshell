@@ -6,7 +6,7 @@
 /*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 11:59:16 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/22 15:38:48 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:26:27 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ bool	read_in_stdin(t_minishell *mshell, int fd, char *word)
 		buf = readline("> ");
 		if (!buf && read_in_stdin_error(word))
 			break ;
-		if (!ft_strncmp(word, buf, INT_MAX) || g_pid == -42)
+		if (!ft_strncmp(word, buf, INT_MAX) || g_signal  == -42)
 			break ;
 		if (!expand_entry(mshell, &buf))
 			free_and_exit(mshell, 1);
@@ -133,7 +133,7 @@ int	wait_process(void)
 
 void	handler_sigint_heredoc(int signum)
 {
-	g_pid = signum;
+	g_signal = signum;
 	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
@@ -273,7 +273,7 @@ int	init_heredoc(char **line, int fd)
 	*line = readline("> ");
 	if (*line == NULL)
 	{
-		if (g_pid)
+		if (g_signal )
 		{
 			close(fd);
 			return (-1);
@@ -317,7 +317,7 @@ int	process_heredoc_redir(t_heredoc ms_heredoc, t_minishell *mshell)
 	{
 		if (init_heredoc(&line, ms_heredoc.fd) < 0)
 		{
-			if (g_pid == SIGINT)
+			if (g_signal  == SIGINT)
 				return (130);
 			return (166);
 		}
@@ -465,7 +465,7 @@ void	handle_child_process(t_minishell *mshell, char *entry)
 {
 	int		status;
 
-	g_pid = 0;
+	g_signal  = 0;
 	setup_signals_heredoc();
 	status = 1;
 	tokenize_entry(&mshell->token, entry);
@@ -541,7 +541,7 @@ t_status	parse_entry(t_minishell *mshell, char *entry)
 		return (FAIL);
 	else if (handle_state(state) == 2)
 		return (FAIL);
-	if (g_pid == 130)
+	if (g_signal  == 130)
 		mshell->exit_code = 130;
 	if (!expand_entry(mshell, &entry))
 		free_and_exit(mshell, 1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmihangy <pmihangy@student.42antanana      +#+  +:+       +#+        */
+/*   By: irazafim <irazafim@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:34:31 by pmihangy          #+#    #+#             */
-/*   Updated: 2024/12/21 09:28:33 by pmihangy         ###   ########.fr       */
+/*   Updated: 2024/12/23 10:06:46 by irazafim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,15 @@ t_status	exec_cmd(t_minishell *mshell, t_cmd *cmd)
 	fd = mshell->pipefd;
 	if (pipe(fd) == -1)
 		return (FAIL);
-	g_pid = fork();
-	if (g_pid == 0)
+	g_signal = fork();
+	if (g_signal == 0)
 	{
 		if (cmd->cmd_param && cmd->cmd_param[0])
 			child_process(mshell, cmd, fd);
 		else
 			free_and_exit(mshell, 0);
 	}
-	else if (g_pid > 0)
+	else if (g_signal > 0)
 		parent_process(mshell, cmd, fd);
 	else
 		free_and_exit(mshell, 1);
